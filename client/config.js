@@ -1,0 +1,1 @@
+export const API="https://loose-moles-warn.loca.lt/api"

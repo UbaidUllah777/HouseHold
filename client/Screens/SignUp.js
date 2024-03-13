@@ -5,6 +5,7 @@ import UserInput from '../components/auth/UserInput';
 import { Button, ButtonGroup, withTheme } from '@rneui/themed';
 import axios from 'axios';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import {API} from "../config"
 
 
 
@@ -24,16 +25,25 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
       return
     }
     try {
-      const {data} = await axios.post('http://localhost:8081/api/signup',{
+      const {data} = await axios.post(`${API}/signup`,{
         username,
         email,
         phoneNumber,
         password 
       });
-        setLoading(false)
-      console.log("SIGN UP SUCCESS =>",data)
-      alert("SIGN UP SUCCESSFULLY")
+        if(data.error){
+          alert(data.error)
+          setLoading(false);
+
+        }
+        else{
+          setLoading(false)
+          console.log("SIGN UP SUCCESS =>",data)
+          alert("SIGN UP SUCCESSFULLY")
+        }
     } catch (error) {
+      alert("Signing Up Failed, please try again")
+
       console.log(error);
       setLoading(false)
 
@@ -49,7 +59,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
      <Text title bold center style={{
         fontFamily:"poppins",
         fontWeight:700,
-        marhinTop:20,
+        marginTop:20,
         marginBottom:20
       }}>Sign Up</Text>
     <UserInput name="Username" value={username} setValue={setUserName} autoCapitalize="words" autoCorrect={false} />

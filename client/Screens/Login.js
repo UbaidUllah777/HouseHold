@@ -5,7 +5,7 @@ import UserInput from "../components/auth/UserInput"
 import { Button } from '@rneui/themed';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import axios from 'axios';
-
+import { API } from '../config';
 
  function Login({navigation}) {
   const [email,setEmail]=useState("");
@@ -21,16 +21,20 @@ import axios from 'axios';
       return
     }
     try {
-      const {data} = await axios.post('http://localhost:8081/api/signin',{
-      
+      const {data} = await axios.post(`${API}/signin`,{
         email,
-   
         password 
       });
-        setLoading(false)
+      if(data.error){
+        alert(data.error);
+        setLoading(false);
+      }
+    else{   
+       setLoading(false)
       console.log("SIGN IN SUCCESS =>",data)
-      alert("SIGNED IN SUCCESSFULLY")
+      alert("SIGNED IN SUCCESSFULLY")}
     } catch (error) {
+      alert("Logging In Failed, please try again")
       console.log(error);
       setLoading(false)
 
