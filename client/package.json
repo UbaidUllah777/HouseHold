@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@kaloraat/react-native-text": "^1.0.4",
+    "@react-native-async-storage/async-storage": "^1.22.3",
     "@react-navigation/native": "^6.1.15",
     "@react-navigation/native-stack": "^6.9.24",
     "@rneui/themed": "^4.0.0-rc.8",

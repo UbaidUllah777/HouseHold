@@ -1,1 +1,1 @@
-export const API="https://loose-moles-warn.loca.lt/api"
+export const API="https://dark-banks-dream.loca.lt/api"

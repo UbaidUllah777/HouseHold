@@ -6,6 +6,7 @@ import { Button } from '@rneui/themed';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import axios from 'axios';
 import { API } from '../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
  function Login({navigation}) {
   const [email,setEmail]=useState("");
@@ -30,6 +31,8 @@ import { API } from '../config';
         setLoading(false);
       }
     else{   
+      // save response in async storage
+      await AsyncStorage.setItem("@auth", JSON.stringify(data));
        setLoading(false)
       console.log("SIGN IN SUCCESS =>",data)
       alert("SIGNED IN SUCCESSFULLY")}
@@ -42,6 +45,12 @@ import { API } from '../config';
     }
   }
 
+
+  const loadFromAsyncStorage = async () => {
+    let data= await AsyncStorage.getItem("@auth");
+    console.log("FROM ASYNC STORAGE => ", data);
+    };
+    loadFromAsyncStorage();
 
   return (
 

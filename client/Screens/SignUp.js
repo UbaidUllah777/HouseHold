@@ -6,6 +6,7 @@ import { Button, ButtonGroup, withTheme } from '@rneui/themed';
 import axios from 'axios';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {API} from "../config"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -37,6 +38,8 @@ import {API} from "../config"
 
         }
         else{
+          // save response in async storage
+          await AsyncStorage.setItem("@auth", JSON.stringify(data));
           setLoading(false)
           console.log("SIGN UP SUCCESS =>",data)
           alert("SIGN UP SUCCESSFULLY")
