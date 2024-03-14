@@ -1,13 +1,12 @@
-import React,{useState} from 'react'
+import React,{useState, useContext} from 'react'
 import { StyleSheet, View,ScrollView,Platform} from 'react-native'
 import  Text from '@kaloraat/react-native-text'
 import UserInput from '../components/auth/UserInput';
-import { Button, ButtonGroup, withTheme } from '@rneui/themed';
+import { Button} from '@rneui/themed';
 import axios from 'axios';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import {API} from "../config"
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { AuthContext } from '../context/auth';
 
 
  function SignUp({navigation}) {
@@ -16,6 +15,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
   const [phoneNumber,setPhoneNumber]=useState("");
   const [password,setPassword]=useState("");
   const [loading,setLoading]=useState("");
+
+  //Context
+  const[state,setState]=useContext(AuthContext)
+
 
 
   const handleSubmit=async()=>{
@@ -26,7 +29,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
       return
     }
     try {
-      const {data} = await axios.post(`${API}/signup`,{
+      const {data} = await axios.post(`/signup`,{
         username,
         email,
         phoneNumber,
@@ -38,11 +41,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
         }
         else{
+
+          //save to context
+          setState(data);
           // save response in async storage
           await AsyncStorage.setItem("@auth", JSON.stringify(data));
           setLoading(false)
           console.log("SIGN UP SUCCESS =>",data)
           alert("SIGN UP SUCCESSFULLY")
+          navigation.navigate("Home")
         }
     } catch (error) {
       alert("Signing Up Failed, please try again")

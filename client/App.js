@@ -8,6 +8,14 @@ import ForgotPassword from './Screens/ForgotPassword';
 import ResetPassword from './Screens/ResetPassword';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Home from './Screens/Home';
+import AddFoodItem from './Screens/AddFoodItem';
+
+
+import {AuthProvider} from "./context/auth"
+
+
+
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -21,7 +29,8 @@ export default function App() {
     }
   return (
 <NavigationContainer>
-<Stack.Navigator initialRouteName="GetStarted"   screenOptions={{
+<AuthProvider>
+<Stack.Navigator initialRouteName="AddFoodItem"   screenOptions={{
     headerShown: false
   }}>
 <Stack.Screen name="GetStarted" component={GetStarted} />
@@ -30,7 +39,10 @@ export default function App() {
 <Stack.Screen name="LoginWithPhone" component={LoginWithPhone} />
 <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
 <Stack.Screen name="ResetPassword" component={ResetPassword} />
+<Stack.Screen name="Home" component={Home} />
+<Stack.Screen name="AddFoodItem" component={AddFoodItem} />
 </Stack.Navigator>
+</AuthProvider>
 </NavigationContainer>
   );
 }

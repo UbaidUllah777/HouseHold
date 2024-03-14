@@ -8,7 +8,9 @@ function UserInput({ name, value, setValue,
     autoCorrect=false, 
     autoComplete="off", 
     keyboardType="default",
-    secureTextEntry =false
+    secureTextEntry =false,
+    placeholder="",
+    onChangeText=false
   }) {
   // Load the 'poppins' font
   const [fontsLoaded] = useFonts({
@@ -41,6 +43,8 @@ function UserInput({ name, value, setValue,
         autoComplete={autoComplete}
         keyboardType={keyboardType}
         secureTextEntry ={secureTextEntry}
+        placeholder={placeholder}
+       
 
 
         

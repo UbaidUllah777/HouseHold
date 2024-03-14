@@ -1,17 +1,20 @@
-import React,{useState} from 'react'
+import React,{useState, useContext} from 'react'
 import { StyleSheet, View,Platform} from 'react-native'
 import  Text from '@kaloraat/react-native-text'
 import UserInput from "../components/auth/UserInput"
 import { Button } from '@rneui/themed';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import axios from 'axios';
-import { API } from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthContext } from '../context/auth';
 
  function Login({navigation}) {
   const [email,setEmail]=useState("");
   const [password,setPassword]=useState("");
   const [loading,setLoading]=useState("");
+
+  // context
+  const[state,setState]=useContext(AuthContext)
 
 
   const handleSubmit=async()=>{
@@ -22,7 +25,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
       return
     }
     try {
-      const {data} = await axios.post(`${API}/signin`,{
+      const {data} = await axios.post(`/signin`,{
         email,
         password 
       });
@@ -31,11 +34,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
         setLoading(false);
       }
     else{   
+
+      setState(data)
       // save response in async storage
       await AsyncStorage.setItem("@auth", JSON.stringify(data));
        setLoading(false)
       console.log("SIGN IN SUCCESS =>",data)
-      alert("SIGNED IN SUCCESSFULLY")}
+      alert("SIGNED IN SUCCESSFULLY")};
+      navigation.navigate("Home")
     } catch (error) {
       alert("Logging In Failed, please try again")
       console.log(error);
