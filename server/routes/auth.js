@@ -10,7 +10,8 @@ const {
   forgotPassword,
   resetPassword,
   AddFoodItem,
-  ViewFoodItems
+  ViewFoodItems,
+  UpdateFoodItem,
 } = require("../controllers/auth");
 
 router.get("/", (req, res) => {
@@ -24,5 +25,7 @@ router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
 router.post("/add-food-item", AddFoodItem);
 router.get("/food-items", ViewFoodItems);
+router.post("/update-item", UpdateFoodItem);
+
 
 export default router;

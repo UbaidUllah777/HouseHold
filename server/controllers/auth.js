@@ -224,10 +224,70 @@ export const AddFoodItem = async (req, res) => {
 };
 
 
+// Previously for Fetching all items
+
+// export const ViewFoodItems = async (req, res) => {
+//   try {
+//     const foodItems = await FoodItem.find();
+//     res.json(foodItems);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Server error" });
+//   }
+// };
+
+
+
 export const ViewFoodItems = async (req, res) => {
   try {
-    const foodItems = await FoodItem.find();
+    // Extract the creator's ID from the query parameters
+    const { creator } = req.query;
+
+    // Check if the creator ID is provided
+    if (!creator) {
+      return res.status(400).json({ error: "Creator ID is required" });
+    }
+
+    // Fetch food items that belong to the specified creator
+    const foodItems = await FoodItem.find({ creator });
+
+    // Send the filtered food items as the response
     res.json(foodItems);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+
+
+
+// server/controllers/auth.js
+
+export const UpdateFoodItem = async (req, res) => {
+  console.log("HIT Update Item");
+ 
+  try {
+    // Extract the food item details from the request body
+    const { id, updatedItem } = req.body;
+    console.log("id:",id)
+    console.log("Item:",updatedItem)
+
+    // Check if the food item ID is provided
+    if (!id) {
+      return res.status(400).json({ error: "Food item ID is required" });
+    }
+
+    // Check if the updated food item details are provided
+    if (!updatedItem) {
+      return res.status(400).json({ error: "Updated food item details are required" });
+    }
+
+    // Update the food item details in the database
+    await FoodItem.findByIdAndUpdate(id, updatedItem, { new: true });
+
+    // Send a success response back to the client
+    res.json({ success: true, message: "Food item updated successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server error" });

@@ -1,12 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, TextInput, Platform } from 'react-native';
 import Text from '@kaloraat/react-native-text';
 import axios from 'axios';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Octicons } from '@expo/vector-icons';
+import { AuthContext } from "../context/auth";
 
 
-const ViewFoodItems = ({ navigation }) => {
+const ViewFoodItems = ({ navigation,route }) => {
+  const [state, setState] = useContext(AuthContext)
+  const signedInUserID= state.user._id
+
+    // Inside the component
+    useEffect(() => {
+      // Check if there are updated item data passed from the ItemDetailScreen
+      if (route.params && route.params.updatedItem) {
+        // Update the state with the updated item data
+        setFoodItems(prevFoodItems => {
+          const updatedItemId = route.params.updatedItem._id;
+          return prevFoodItems.map(item => {
+            if (item._id === updatedItemId) {
+              // Replace the old item with the updated item
+              return route.params.updatedItem;
+            } else {
+              return item;
+            }
+          });
+        });
+      }
+    }, [route.params]);
+
   const [foodItems, setFoodItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -18,7 +41,8 @@ const ViewFoodItems = ({ navigation }) => {
   const fetchFoodItems = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/food-items');
+      // Send a request to fetch food items for the signed-in user
+      const response = await axios.get(`/food-items?creator=${signedInUserID}`);
       setFoodItems(response.data);
       setLoading(false);
     } catch (error) {
@@ -26,6 +50,7 @@ const ViewFoodItems = ({ navigation }) => {
       setLoading(false);
     }
   };
+  
 
   const goBack = () => {
     navigation.goBack();
@@ -48,7 +73,7 @@ const ViewFoodItems = ({ navigation }) => {
   };
 
   const navigateToDetail = (item) => {
-    // Navigate to item detail screen with item data
+    navigation.navigate('ItemDetail', { item });
   };
 
   return (
@@ -60,7 +85,7 @@ const ViewFoodItems = ({ navigation }) => {
       </View>
       <View style={styles.titleContainer}>
         <Text title bold center style={styles.heading}>
-          View added food items
+          View added food items 
         </Text>
       </View>
       <View style={styles.searchContainer}>

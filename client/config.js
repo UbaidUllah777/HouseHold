@@ -1,1 +1,1 @@
-export const API="https://many-kiwis-shout.loca.lt/api"
+export const API="https://nine-candies-joke.loca.lt/api"
