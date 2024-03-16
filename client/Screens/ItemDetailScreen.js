@@ -1,14 +1,21 @@
+
 import React, { useState } from 'react';
 import { StyleSheet, View, TouchableOpacity, TextInput, Platform, Alert } from 'react-native';
 import { Button } from '@rneui/themed';
 import Text from '@kaloraat/react-native-text';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import axios from 'axios'; // Import axios for making API requests
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const ItemDetailScreen = ({ navigation, route }) => {
   const { item } = route.params; // Destructure item from route params
   const [updatedItem, setUpdatedItem] = useState(item); // Initialize updatedItem state with the item details
   const [editMode, setEditMode] = useState(false); // State variable to track edit mode
+  const [showDatePicker, setShowDatePicker] = useState(false); // State variable to track date picker visibility
+  const [expiryDate, setExpiryDate] = useState(
+    updatedItem.expiryDate ? new Date(updatedItem.expiryDate) : new Date()
+  );
+  
 
   const goBack = () => {
     navigation.goBack();
@@ -16,13 +23,17 @@ const ItemDetailScreen = ({ navigation, route }) => {
 
   const toggleEditMode = () => {
     setEditMode(!editMode);
+    setShowDatePicker(false); // Ensure date picker is hidden when toggling edit mode
   };
 
   const updateItemDetails = async () => {
     try {
+      // Convert expiryDate to a serializable format (e.g., timestamp or ISO string)
+      const updatedExpiryDate = updatedItem.expiryDate.toISOString(); // Convert to ISO string
       const response = await axios.post('/update-item', {
         id: updatedItem._id,
-        updatedItem,
+        // Pass the updated expiryDate to the server
+        updatedItem: { ...updatedItem, expiryDate: updatedExpiryDate },
       });
       if (response.data.success) {
         // Show success alert
@@ -37,6 +48,17 @@ const ItemDetailScreen = ({ navigation, route }) => {
       console.error(error);
       // Show error alert
       Alert.alert('Error', 'An error occurred', [{ text: 'OK' }]);
+    }
+  };
+  
+  
+  
+
+  const handleDateChange = (event, selectedDate) => {
+    setShowDatePicker(Platform.OS === 'ios');
+    if (selectedDate) {
+      setExpiryDate(selectedDate);
+      setUpdatedItem({ ...updatedItem, expiryDate: selectedDate });
     }
   };
 
@@ -70,10 +92,21 @@ const ItemDetailScreen = ({ navigation, route }) => {
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Expiry Date:</Text>
         <TextInput
-          style={styles.input}
-          value={new Date(updatedItem.expiryDate).toLocaleDateString()}
-          editable={false}
+          style={[styles.input, !editMode && styles.disabledTextInput]}
+          value={expiryDate.toLocaleDateString()}
+          editable={editMode} // Set editable based on edit mode
+          onTouchStart={() => setShowDatePicker(editMode)} // Show date picker only in edit mode
         />
+        {showDatePicker && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={expiryDate}
+            mode="date"
+            is24Hour={true}
+            display="default"
+            onChange={handleDateChange}
+          />
+        )}
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Quantity:</Text>
@@ -132,6 +165,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     height: 48,
   },
+  disabledTextInput: {
+    backgroundColor: '#ddd', // Add background color for disabled text input
+  },
   buttonContainer: {
     marginHorizontal: 50,
     marginVertical: 20,
@@ -154,6 +190,9 @@ const styles = StyleSheet.create({
     color: '#1C552B',
     fontWeight: '600',
     fontFamily: 'poppins',
+  },
+  disabledButton: {
+    backgroundColor: '#cccccc', // Add background color for disabled button
   },
 });
 

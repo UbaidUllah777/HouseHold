@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '../context/auth';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
+import SelectDropdown from 'react-native-select-dropdown'
 
 function AddFoodItem({ navigation }) {
   const [category, setCategory] = useState('');
@@ -123,28 +124,24 @@ function AddFoodItem({ navigation }) {
                 
               }}>*</Text></Text></View>
     
-      <View  style={{ marginHorizontal: 12,  marginBottom:10, opacity:.5,backgroundColor:"#fefefe", paddingHorizontal:10, borderRadius:20,height:60 }}>
+      <View  style={{ marginHorizontal: 12,  marginBottom:10, opacity:.6,backgroundColor:"#fefefe",  borderRadius:20,height:60 }}>
    
-                      <Picker     style={{
-          borderBottomWidth: 0.5,
-          height: 48,
-          borderBottomColor: '#8e93a1',
-          marginBottom: 30,
-          fontFamily: 'poppins',
-          borderWidth: 1, // Add border width
-          borderColor: '#8e93a1', // Add border color
-          borderRadius: 8, // Add border radius
-          marginBottom: 20,
-          fontFamily: 'poppins',
-        }}
-                          selectedValue={category}
-                          onValueChange={(itemValue) => setCategory(itemValue)}
-                      >
-                          <Picker.Item label="Select category" value="" />
-                          {foodCategories.map((category, index) => (
-                              <Picker.Item key={index} label={category} value={category} />
-                          ))}
-                      </Picker>
+                        <SelectDropdown
+                    buttonStyle={{ backgroundColor: "#fefefe" ,opacity:.6,width:"100%",marginTop:2, borderRadius:20,}}
+                    buttonTextStyle={{fontFamily:"poppins" ,marginLeft:-5,fontWeight:"600"}}
+                    data={foodCategories}
+                    onSelect={(selectedItem, index) => {
+                      setCategory(selectedItem); // Update the category state
+                    }}
+                    buttonTextAfterSelection={(selectedItem, index) => {
+                      return selectedItem;
+                    }}
+                    rowTextForSelection={(item, index) => {
+                      return item;
+                    }}
+                  />
+
+
                   </View>
 
         <UserInput name="Item Name*" value={itemName} setValue={setItemName} />
@@ -297,7 +294,13 @@ button: {
     
   },
 
-
+  backButtonContainer: {
+    position: 'absolute',
+    top: 30,
+    left: 10,
+    zIndex: 1,
+    bottom:10
+  },
 
 });
 
