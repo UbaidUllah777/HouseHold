@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import Text from "@kaloraat/react-native-text";
 import { AuthContext } from "../context/auth";
-
-import { StyleSheet, View, Platform, Image } from 'react-native'
+import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, View, Platform, Image,TouchableOpacity  } from 'react-native'
 import UserInput from "../components/auth/UserInput"
 import { Button } from '@rneui/themed';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -11,8 +11,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import MenuButton from "../components/UI/MenuButton";
 import {Card} from 'react-native-shadow-cards';
 
-export default function Home() {
+export default function Home({navigation}) {
     const [state, setState] = useContext(AuthContext)
+    const navigateToAddFoodItem = () => {
+        navigation.navigate('AddFoodItem'); // Navigate to AddFoodItem screen
+    };
+    const navigateToViewFoodItem = () => {
+        navigation.navigate('ViewFoodItems'); // Navigate to AddFoodItem screen
+    };
     return (
         <KeyboardAwareScrollView
             enableOnAndroid={true}
@@ -43,7 +49,12 @@ export default function Home() {
                             fontSize: 22,
                             color: "white"
                         }}>
-                            Hi, Doha
+                            Hi, <Text style={{
+                            fontFamily: "poppins",
+                            fontWeight: 700,
+                            fontSize: 22,
+                            color: "white"
+                        }}>{state.user.username}</Text>
                         </Text>
                         <Text style={{
                             fontFamily: "poppins",
@@ -128,7 +139,7 @@ export default function Home() {
                 </View>
               </Card>
 
-
+              
 
             
               {/* Services */}
@@ -144,7 +155,10 @@ export default function Home() {
                         }}>Services</Text>
 
                         <View style={{flexDirection:"row"}}>
+
+                        <TouchableOpacity onPress={navigateToAddFoodItem}>
                         <View style={{ margin: 10, flex:1, width:110,backgroundColor:"#23AA473D", borderRadius:10}}>
+
                         <View style={[styles.serviceContainer, { width: 70, height: 70 }]}>
                         <Image source={require('../assets/addFoodItem.png')} style={styles.serviceImage} />
                         
@@ -160,8 +174,8 @@ export default function Home() {
 
                         }}>Add food item</Text>
                         </View>
-
-                        
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={navigateToViewFoodItem}>
                         <View style={{ margin: 10, flex:1, width:110,backgroundColor:"#23AA473D", borderRadius:10}}>
                         <View style={[styles.serviceContainer, { width: 70, height: 70 }]}>
                         <Image source={require('../assets/viewFoodItems.png')} style={styles.serviceImage} />
@@ -178,7 +192,7 @@ export default function Home() {
 
                         }}>View food items</Text>
                         </View>
-
+                        </TouchableOpacity>
                         
                         <View style={{ margin: 10, flex:1, width:110,backgroundColor:"#23AA473D", borderRadius:10}}>
                         <View style={[styles.serviceContainer, { width: 70, height: 70 }]}>
@@ -196,6 +210,8 @@ export default function Home() {
 
                         }}>Find food bank</Text>
                         </View>
+
+
                         </View>
 
   

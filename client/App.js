@@ -10,6 +10,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './Screens/Home';
 import AddFoodItem from './Screens/AddFoodItem';
+import ViewFoodItems from './Screens/ViewFoodItems';
 
 
 import {AuthProvider} from "./context/auth"
@@ -30,7 +31,7 @@ export default function App() {
   return (
 <NavigationContainer>
 <AuthProvider>
-<Stack.Navigator initialRouteName="AddFoodItem"   screenOptions={{
+<Stack.Navigator initialRouteName="ViewFoodItems"   screenOptions={{
     headerShown: false
   }}>
 <Stack.Screen name="GetStarted" component={GetStarted} />
@@ -41,6 +42,7 @@ export default function App() {
 <Stack.Screen name="ResetPassword" component={ResetPassword} />
 <Stack.Screen name="Home" component={Home} />
 <Stack.Screen name="AddFoodItem" component={AddFoodItem} />
+<Stack.Screen name="ViewFoodItems" component={ViewFoodItems} />
 </Stack.Navigator>
 </AuthProvider>
 </NavigationContainer>

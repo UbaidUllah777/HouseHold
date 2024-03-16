@@ -3,6 +3,7 @@ import User from "../models/user";
 import { hashPassword, comparePassword } from "../helpers/auth";
 import jwt from "jsonwebtoken";
 import nanoid from "nanoid";
+import FoodItem from '../models/foodItem'
 
 // sendgrid
 require("dotenv").config();
@@ -165,5 +166,70 @@ export const resetPassword = async (req, res) => {
     return res.json({ ok: true });
   } catch (err) {
     console.log(err);
+  }
+};
+
+
+
+export const AddFoodItem = async (req, res) => {
+  console.log("HIT Add Food Item");
+  try {
+    // validation
+    const {
+      category,
+      itemName,
+      expiryDate,
+      quantityORweight,
+      creator
+    } = req.body;
+
+    if (!category) {
+      return res.json({
+        error: "category Full Name is required",
+      });
+    }
+    if (!itemName) {
+      return res.json({
+        error: "item Name is required",
+      });
+    }
+    if (!expiryDate) {
+      return res.json({
+        error: "Expiry date   is required",
+      });
+    }
+    if (!quantityORweight) {
+      return res.json({
+        error: "quantityORweight  is Required",
+      });
+    }
+
+    const foodItem = new FoodItem({
+      category,
+      itemName,
+      expiryDate,
+      quantityORweight,
+      creator
+    });
+
+    // Save the food item
+    await foodItem.save();
+
+    // Send a response back to the client
+    res.json({ success: true, foodItem });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+
+export const ViewFoodItems = async (req, res) => {
+  try {
+    const foodItems = await FoodItem.find();
+    res.json(foodItems);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
   }
 };

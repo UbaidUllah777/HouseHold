@@ -9,16 +9,20 @@ const {
   signin,
   forgotPassword,
   resetPassword,
+  AddFoodItem,
+  ViewFoodItems
 } = require("../controllers/auth");
 
 router.get("/", (req, res) => {
   return res.json({
-    data: "hello world from kaloraat auth API",
+    data: "Hello, Doha Testing Main ROute",
   });
 });
 router.post("/signup", signup);
 router.post("/signin", signin);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
+router.post("/add-food-item", AddFoodItem);
+router.get("/food-items", ViewFoodItems);
 
 export default router;
