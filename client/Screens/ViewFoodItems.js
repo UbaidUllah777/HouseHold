@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Image, TouchableOpacity,  Platform } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, TextInput, Platform } from 'react-native';
 import Text from '@kaloraat/react-native-text';
 import axios from 'axios';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { Button } from '@rneui/themed';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Octicons } from '@expo/vector-icons';
 
 
 const ViewFoodItems = ({ navigation }) => {
   const [foodItems, setFoodItems] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchFoodItems();
@@ -31,17 +32,19 @@ const ViewFoodItems = ({ navigation }) => {
   };
 
   const renderItemCards = () => {
-    return foodItems.map((item, index) => (
-        <View  key={index} style={styles.foodItemCard}>
-          <Image source={require('../assets/cocoloate.png')} style={styles.foodItemImage} />
-          <Text center style={styles.itemName}>{item.itemName}</Text>
-          <TouchableOpacity key={index} onPress={() => navigateToDetail(item)}>
-
-          <Text style={styles.detailsButtonText}>Details</Text>
-          </TouchableOpacity>
-        </View>
-    
-    ));
+    return foodItems
+      .filter(item => item.itemName.toLowerCase().includes(searchQuery.toLowerCase()))
+      .map((item, index) => (
+        <TouchableOpacity key={index} onPress={() => navigateToDetail(item)}>
+          <View style={styles.foodItemCard}>
+            <Image source={require('../assets/cocoloate.png')} style={styles.foodItemImage} />
+            <Text center style={styles.itemName}>{item.itemName}</Text>
+            <TouchableOpacity onPress={() => navigateToDetail(item)}>
+              <Text style={styles.detailsButtonText}>Details</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      ));
   };
 
   const navigateToDetail = (item) => {
@@ -60,9 +63,21 @@ const ViewFoodItems = ({ navigation }) => {
           View added food items
         </Text>
       </View>
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search food items"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+        <TouchableOpacity style={styles.filterIcon}>
+             <Octicons name="filter" size={24} color="white"  />
+        </TouchableOpacity>
+      </View>
       <KeyboardAwareScrollView
         enableOnAndroid={true}
         enableAutomaticScroll={(Platform.OS === 'ios')}
+        style={{ flex: 1 }}
       >
         <View style={styles.gridContainer}>{renderItemCards()}</View>
       </KeyboardAwareScrollView>
@@ -98,6 +113,25 @@ const styles = StyleSheet.create({
     fontFamily: 'poppins',
     fontWeight: '700',
   },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    marginBottom: 10,
+  },
+  searchInput: {
+    flex: 1,
+    height: 40,
+    borderWidth: 1,
+    borderRadius: 20,
+    paddingHorizontal: 15,
+    marginRight: 10,
+  },
+  filterIcon: {
+    padding: 10,
+    borderRadius: 15,
+    backgroundColor: '#1C552B',
+  },
   gridContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -125,18 +159,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 5,
   },
-
   detailsButtonText: {
     color: '#fff',
     fontWeight: '600',
     fontFamily: 'poppins',
     textAlign: 'center',
-    backgroundColor:'green',
-    paddingTop:8,
-    paddingBottom:8,
-    paddingRight:25,
-    paddingLeft:25,
-    borderRadius:10
+    backgroundColor: '#1C552B',
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingRight: 25,
+    paddingLeft: 25,
+    borderRadius: 10,
+    marginTop: 10,
   },
 });
 
