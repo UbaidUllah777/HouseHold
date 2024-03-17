@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import Text from "@kaloraat/react-native-text";
 import { AuthContext } from "../context/auth";
 import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, View, Platform, Image, TouchableOpacity,SafeAreaView,StatusBar,ScrollView } from 'react-native'
+import { StyleSheet, View, Platform, Image, TouchableOpacity,SafeAreaView } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import MenuButton from "../components/UI/MenuButton";
 import { Card } from 'react-native-shadow-cards';
@@ -26,13 +26,10 @@ export default function Home({ navigation }) {
         navigation.navigate('BlogDetails', { id: blogId });
     };
 
-    const navigateToScanExpiryDate = () => {
-        navigation.navigate('ScanExpiryDate');
-    };
-
+    const numServices = 3; // Update this if you have a different number of services
+    const serviceContainerWidth = `${96 / numServices}%`;
 
     return (
-        
         <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
         
         <View style={{ flex: 1 }}>
@@ -40,14 +37,13 @@ export default function Home({ navigation }) {
                 enableOnAndroid={true}
                 enableAutomaticScroll={(Platform.OS === 'ios')}
                 contentContainerStyle={{ flexGrow: 1 }}
-                stickyHeaderIndices={[1]}
-                extraScrollHeight={100}
+                stickyHeaderIndices={[0]}
             >
-  <StatusBar   barStyle="dark-content" backgroundColor="#ffff" />
+
                 {/* Header */}
-                <View style={{ marginTop: 0 }}>
+                <View style={{ paddingTop: 8 }}>
                     <View style={{
-                        
+                        marginTop: "10%",
                         backgroundColor: "#20542c",
                         height: 80,
                         width: "100%",
@@ -56,8 +52,7 @@ export default function Home({ navigation }) {
                         flexDirection: 'row', // Arrange children horizontally
                         alignItems: 'center', // Center children vertically
                         justifyContent: 'space-between', // Push children to opposite edges
-                        paddingHorizontal: 10,
-                        
+                        paddingHorizontal: 10
                     }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <View style={[styles.container, { width: 70, height: 70 }]}>
@@ -174,87 +169,69 @@ export default function Home({ navigation }) {
 
                         }}>Services</Text>
 
- {/* Services */}
-                            <ScrollView
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                            contentContainerStyle={styles.servicesContainer}
-                        >
-                            {/* Add Food Item */}
-                            <TouchableOpacity onPress={navigateToAddFoodItem} style={styles.serviceContainer}>
-                                <View style={styles.serviceContent}>
-                                <View style={{ width: 70, height: 70,backgroundColor:"white", margin:10, borderRadius:30 }}>
-                                                    <Image source={require('../assets/addFoodItem.png')} style={{    width: '70%',
-                                                                height: '70%',
-                                                                marginLeft: 11,
-                                                                marginTop:8
-                                                                }} />
-                                                                                                        
-                                            </View>
-                                    <Text style={styles.serviceText}>Add food item</Text>
-                                </View>
-                            </TouchableOpacity>
-                            {/* View Food Items */}
-                            <TouchableOpacity onPress={navigateToViewFoodItem} style={styles.serviceContainer}>
-                            <View style={styles.serviceContent}>
-                                <View style={{ width: 70, height: 70,backgroundColor:"white", margin:10, borderRadius:30 }}>
-                                                    <Image source={require('../assets/viewFoodItems.png')} style={{    width: '70%',
-                                                                height: '70%',
-                                                                marginLeft: 11,
-                                                                marginTop:8
-                                                                }} />
-                                                                                                        
-                                            </View>
-                                    <Text style={styles.serviceText}>View food Items</Text>
-                                </View>
-                            </TouchableOpacity>
-                            {/* View Food Bank */}
-                            <TouchableOpacity onPress={navigateToViewFoodBanks} style={styles.serviceContainer}>
-                            <View style={styles.serviceContent}>
-                                <View style={{ width: 70, height: 70,backgroundColor:"white", margin:10, borderRadius:30 }}>
-                                                    <Image source={require('../assets/viewFoodBanks.png')} style={{    width: '70%',
-                                                                height: '70%',
-                                                                marginLeft: 11,
-                                                                marginTop:8
-                                                                }} />
-                                                                                                        
-                                            </View>
-                                    <Text style={styles.serviceText}>View Food Bank</Text>
-                                </View>
-                            </TouchableOpacity>
-                             {/* Find Food Bank */}
-                            <TouchableOpacity onPress={navigateToViewFoodBanks} style={styles.serviceContainer}>
-                            <View style={styles.serviceContent}>
-                                <View style={{ width: 70, height: 70,backgroundColor:"white", margin:10, borderRadius:30 }}>
-                                                    <Image source={require('../assets/findFoodbank.png')} style={{    width: '70%',
-                                                                height: '70%',
-                                                                marginLeft: 11,
-                                                                marginTop:8
-                                                                }} />
-                                                                                                        
-                                            </View>
-                                    <Text style={styles.serviceText}>Find food bank</Text>
-                                </View>
+
+                        <View style={{ flexDirection: "row" ,margin:2}}>
+                            {/* Adjusted width for each service container */}
+                            <TouchableOpacity onPress={navigateToAddFoodItem} style={[ { width: serviceContainerWidth }]}>
+                            <View style={{ margin: 10, flex:1, width:110,backgroundColor:"#23AA473D", borderRadius:10}}>
+
+                        <View style={[styles.serviceContainer, { width: 70, height: 70 }]}>
+                        <Image source={require('../assets/addFoodItem.png')} style={styles.serviceImage} />
+
+                        </View>
+                        <Text style={{
+                            fontFamily: "poppins",
+                            fontWeight:600,
+                            fontSize: 19,
+                            color: "black",
+                            marginTop:3,
+                            marginLeft:10,
+                            paddingBottom:10
+
+                        }}>Add food item</Text>
+                        </View>
                             </TouchableOpacity>
 
-                            
-                             {/* Scan Expiry date */}
-                             <TouchableOpacity onPress={navigateToScanExpiryDate} style={styles.serviceContainer}>
-                            <View style={styles.serviceContent}>
-                                <View style={{ width: 70, height: 70,backgroundColor:"white", margin:10, borderRadius:30 }}>
-                                                    <Image source={require('../assets/scanExpiry.png')} style={{    width: '70%',
-                                                                height: '70%',
-                                                                marginLeft: 11,
-                                                                marginTop:8
-                                                                }} />
-                                                                                                        
-                                            </View>
-                                    <Text style={styles.serviceText}>Scan expiry date</Text>
-                                </View>
-                            </TouchableOpacity>
-                           
-                        </ScrollView>
 
+                            <TouchableOpacity onPress={navigateToViewFoodItem} style={[ { width: serviceContainerWidth }]}>
+                            <View style={{ margin: 10, flex:1, width:110,backgroundColor:"#23AA473D", borderRadius:10}}>
+                                                <View style={[styles.serviceContainer, { width: 70, height: 70 }]}>
+                                                <Image source={require('../assets/viewFoodItems.png')} style={styles.serviceImage} />
+                                                
+                                            </View>
+                                            <Text style={{
+                                                    fontFamily: "poppins",
+                                                    fontWeight:600,
+                                                    fontSize: 19,
+                                                    color: "black",
+                                                    marginTop:3,
+                                                    marginLeft:10,
+                                                    paddingBottom:10
+
+                                                }}>View food items</Text>
+                                                </View>
+                            </TouchableOpacity>
+
+
+                            <TouchableOpacity onPress={navigateToViewFoodBanks} style={[ { width: serviceContainerWidth }]}>
+                                    <View style={{ margin: 10, flex:1, width:110,backgroundColor:"#23AA473D", borderRadius:10}}>
+                                                <View style={[styles.serviceContainer, { width: 70, height: 70 }]}>
+                                                <Image source={require('../assets/findFoodbank.png')} style={styles.serviceImage} />
+                                                
+                                            </View>
+                                            <Text style={{
+                                                    fontFamily: "poppins",
+                                                    fontWeight:600,
+                                                    fontSize: 19,
+                                                    color: "black",
+                                                    marginTop:3,
+                                                    marginLeft:10,
+                                                    paddingBottom:10
+
+                                                }}>Find food bank</Text>
+                                                </View>
+                            </TouchableOpacity>
+                            </View>
   
 
                   
@@ -408,41 +385,46 @@ export default function Home({ navigation }) {
             {/* Footer */}
             <View style={{
                 backgroundColor: "#20542c",
-                height: 60,
+                height: 80,
                 width: "100%",
+                borderBottomRightRadius: 15,
+                borderBottomLeftRadius: 15,
                 flexDirection: 'row', // Arrange children horizontally
                 alignItems: 'center', // Center children vertically
                 justifyContent: 'space-between', // Push children to opposite edges
                 paddingHorizontal: 10
             }}>
-
-                    <View style={{ 
-                        width: 50,
-                         height: 50, 
-                        overflow: 'hidden',
-                        justifyContent: "center",
-                        alignContent: "center",
-                        margin: 5
-                            }}>
-                        <Image source={require('../assets/homeIcon.png')} style={styles.barCodeImage} />
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={[styles.container, { width: 70, height: 70 }]}>
+                        <Image source={require('../assets/dp.png')} style={styles.DPimage} />
                     </View>
-
-
-                    <View style={[styles.container, { width: 50, height: 50 }]}>
-                        <Image source={require('../assets/barcodeIcon.png')} style={styles.barCodeImage} />
+                    <View>
+                        <Text style={{
+                            fontFamily: "poppins",
+                            fontWeight: 700,
+                            fontSize: 22,
+                            color: "white"
+                        }}>
+                            Hi, <Text style={{
+                                fontFamily: "poppins",
+                                fontWeight: 700,
+                                fontSize: 22,
+                                color: "white"
+                            }}>{state.user.username}</Text>
+                        </Text>
+                        <Text style={{
+                            fontFamily: "poppins",
+                            fontWeight: 600,
+                            fontSize: 16,
+                            color: "white"
+                        }}>
+                            Welcome back!
+                        </Text>
                     </View>
+                </View>
 
-                    <View style={{ 
-                        width: 50,
-                         height: 50, 
-                        overflow: 'hidden',
-                        justifyContent: "center",
-                        alignContent: "center",
-                        margin: 5
-                            }}>
-                        <Image source={require('../assets/bellIcon.png')} style={styles.barCodeImage} />
-                    </View>
-
+                {/* Menu Icon */}
+                <MenuButton />
             </View>
         </View>
         </SafeAreaView>
@@ -471,14 +453,9 @@ const styles = StyleSheet.create({
         height: '70%',
         marginLeft: 11
     },
-    barCodeImage: {
-        width: '55%',
-        height: '55%',
-        marginLeft: 11
-    },
     serviceImage: {
-        width: '50%',
-        height: '50%',
+        width: '70%',
+        height: '70%',
         marginLeft: 11
     },
     listItem: {
@@ -488,26 +465,5 @@ const styles = StyleSheet.create({
         color: "black",
         marginTop: 5,
         marginLeft: 10
-    },
-    
-    servicesContainer: {
-        flexDirection: 'row',
-    },
-    serviceContainer: {
-        marginRight: 10,
-        height:180,
-        backgroundColor:"#23AA473D",
-        borderRadius:15,
-        width:120
-    },
-    serviceContent: {
-        alignItems: 'center',
-    },
-    serviceText: {
-        fontFamily: "poppins",
-        fontWeight: 600,
-        fontSize: 19,
-        color: "black",
-        textAlign: 'center',
-    },
+    }
 });

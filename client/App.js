@@ -12,6 +12,9 @@ import Home from './Screens/Home';
 import AddFoodItem from './Screens/AddFoodItem';
 import ViewFoodItems from './Screens/ViewFoodItems';
 import ItemDetailScreen from './Screens/ItemDetailScreen';
+import ViewFoodBanks from './Screens/ViewFoodBanks';
+import FoodBankDetail from './Screens/FoodBankDetail';
+import ScanExpiryDate from './Screens/ScanExpiryDate';
 
 
 import {AuthProvider} from "./context/auth"
@@ -45,6 +48,9 @@ export default function App() {
 <Stack.Screen name="AddFoodItem" component={AddFoodItem} />
 <Stack.Screen name="ViewFoodItems" component={ViewFoodItems} />
 <Stack.Screen name="ItemDetail" component={ItemDetailScreen} />
+<Stack.Screen name="ViewFoodBanks" component={ViewFoodBanks} />
+<Stack.Screen name="FoodBankDetail" component={FoodBankDetail} />
+<Stack.Screen name="ScanExpiryDate" component={ScanExpiryDate} />
 </Stack.Navigator>
 </AuthProvider>
 </NavigationContainer>

@@ -9,12 +9,14 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 const ItemDetailScreen = ({ navigation, route }) => {
   const { item } = route.params; // Destructure item from route params
+  console.log(item); // Log item to inspect its structure
   const [updatedItem, setUpdatedItem] = useState(item); // Initialize updatedItem state with the item details
   const [editMode, setEditMode] = useState(false); // State variable to track edit mode
   const [showDatePicker, setShowDatePicker] = useState(false); // State variable to track date picker visibility
   const [expiryDate, setExpiryDate] = useState(
     updatedItem.expiryDate ? new Date(updatedItem.expiryDate) : new Date()
   );
+  
   
 
   const goBack = () => {
@@ -29,11 +31,10 @@ const ItemDetailScreen = ({ navigation, route }) => {
   const updateItemDetails = async () => {
     try {
       // Convert expiryDate to a serializable format (e.g., timestamp or ISO string)
-      const updatedExpiryDate = updatedItem.expiryDate.toISOString(); // Convert to ISO string
       const response = await axios.post('/update-item', {
         id: updatedItem._id,
         // Pass the updated expiryDate to the server
-        updatedItem: { ...updatedItem, expiryDate: updatedExpiryDate },
+        updatedItem: { ...updatedItem },
       });
       if (response.data.success) {
         // Show success alert
@@ -51,16 +52,19 @@ const ItemDetailScreen = ({ navigation, route }) => {
     }
   };
   
-  
-  
-
   const handleDateChange = (event, selectedDate) => {
     setShowDatePicker(Platform.OS === 'ios');
     if (selectedDate) {
       setExpiryDate(selectedDate);
+      // Update expiryDate only if updatedItem is defined
       setUpdatedItem({ ...updatedItem, expiryDate: selectedDate });
     }
   };
+  
+  
+  
+
+
 
   return (
     <KeyboardAwareScrollView

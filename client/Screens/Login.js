@@ -40,8 +40,12 @@ import { AuthContext } from '../context/auth';
       await AsyncStorage.setItem("@auth", JSON.stringify(data));
        setLoading(false)
       console.log("SIGN IN SUCCESS =>",data)
-      alert("SIGNED IN SUCCESSFULLY")};
+      alert("SIGNED IN SUCCESSFULLY")
+      
       navigation.navigate("Home")
+    };
+
+
     } catch (error) {
       alert("Logging In Failed, please try again")
       console.log(error);
