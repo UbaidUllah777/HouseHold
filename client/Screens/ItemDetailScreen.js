@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, TextInput, Platform, Alert } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, TextInput, Platform, Alert, ActivityIndicator } from 'react-native';
 import { Button } from '@rneui/themed';
 import Text from '@kaloraat/react-native-text';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -9,15 +8,11 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 const ItemDetailScreen = ({ navigation, route }) => {
   const { item } = route.params; // Destructure item from route params
-  console.log(item); // Log item to inspect its structure
   const [updatedItem, setUpdatedItem] = useState(item); // Initialize updatedItem state with the item details
   const [editMode, setEditMode] = useState(false); // State variable to track edit mode
   const [showDatePicker, setShowDatePicker] = useState(false); // State variable to track date picker visibility
-  const [expiryDate, setExpiryDate] = useState(
-    updatedItem.expiryDate ? new Date(updatedItem.expiryDate) : new Date()
-  );
-  
-  
+  const [expiryDate, setExpiryDate] = useState(updatedItem.expiryDate ? new Date(updatedItem.expiryDate) : new Date());
+  const [updating, setUpdating] = useState(false); // State variable to track updating state
 
   const goBack = () => {
     navigation.goBack();
@@ -29,6 +24,7 @@ const ItemDetailScreen = ({ navigation, route }) => {
   };
 
   const updateItemDetails = async () => {
+    setUpdating(true); // Set updating state to true
     try {
       // Convert expiryDate to a serializable format (e.g., timestamp or ISO string)
       const response = await axios.post('/update-item', {
@@ -49,6 +45,8 @@ const ItemDetailScreen = ({ navigation, route }) => {
       console.error(error);
       // Show error alert
       Alert.alert('Error', 'An error occurred', [{ text: 'OK' }]);
+    } finally {
+      setUpdating(false); // Set updating state back to false
     }
   };
   
@@ -60,11 +58,6 @@ const ItemDetailScreen = ({ navigation, route }) => {
       setUpdatedItem({ ...updatedItem, expiryDate: selectedDate });
     }
   };
-  
-  
-  
-
-
 
   return (
     <KeyboardAwareScrollView
@@ -127,18 +120,18 @@ const ItemDetailScreen = ({ navigation, route }) => {
       <TouchableOpacity onPress={toggleEditMode} style={styles.editButton}>
         <Text style={styles.editButtonText}>{editMode ? 'OK' : 'Edit'}</Text>
       </TouchableOpacity>
+      {/* ... */}
       <Button
         onPress={updateItemDetails}
-        title="Confirm"
+        title={updating ? "Updating..." : "Confirm"} // Use updating state to conditionally render text
         titleStyle={styles.buttonTitle}
         buttonStyle={[styles.button, !editMode && styles.disabledButton]}
         containerStyle={styles.buttonContainer}
-        disabled={!editMode}
+        disabled={!editMode || updating} // Disable the button when not in edit mode or when updating
       />
     </KeyboardAwareScrollView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,

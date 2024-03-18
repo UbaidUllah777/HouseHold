@@ -1,5 +1,5 @@
 import React, { useState, useEffect,useContext } from 'react';
-import { StyleSheet, View, Image, TouchableOpacity, TextInput, Platform } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, TextInput, Platform,ActivityIndicator } from 'react-native';
 import Text from '@kaloraat/react-native-text';
 import axios from 'axios';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -31,7 +31,7 @@ const ViewFoodItems = ({ navigation,route }) => {
     }, [route.params]);
 
   const [foodItems, setFoodItems] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
@@ -50,7 +50,6 @@ const ViewFoodItems = ({ navigation,route }) => {
       setLoading(false);
     }
   };
-  
 
   const goBack = () => {
     navigation.goBack();
@@ -104,7 +103,14 @@ const ViewFoodItems = ({ navigation,route }) => {
         enableAutomaticScroll={(Platform.OS === 'ios')}
         style={{ flex: 1 }}
       >
-        <View style={styles.gridContainer}>{renderItemCards()}</View>
+        {loading ? 
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#1C552B" />
+            <Text style={styles.loadingText}>Loading Please Wait...</Text>
+          </View>
+         : 
+          <View style={styles.gridContainer}>{renderItemCards()}</View>
+        }
       </KeyboardAwareScrollView>
     </View>
   );
@@ -196,6 +202,19 @@ const styles = StyleSheet.create({
     paddingLeft: 25,
     borderRadius: 10,
     marginTop: 10,
+  },
+  loadingContainer: {
+    marginTop: 100,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 50,
+    fontFamily: 'poppins',
+    fontWeight: '700',
+    fontSize: 22,
+    color:"black"
   },
 });
 

@@ -15,6 +15,7 @@ import ItemDetailScreen from './Screens/ItemDetailScreen';
 import ViewFoodBanks from './Screens/ViewFoodBanks';
 import FoodBankDetail from './Screens/FoodBankDetail';
 import ScanExpiryDate from './Screens/ScanExpiryDate';
+import FoodBanksInMap from './Screens/FoodBanksInMap';
 
 
 import {AuthProvider} from "./context/auth"
@@ -35,7 +36,7 @@ export default function App() {
   return (
 <NavigationContainer>
 <AuthProvider>
-<Stack.Navigator initialRouteName="Login"   screenOptions={{
+<Stack.Navigator initialRouteName="Home"   screenOptions={{
     headerShown: false
   }}>
 <Stack.Screen name="GetStarted" component={GetStarted} />
@@ -51,6 +52,7 @@ export default function App() {
 <Stack.Screen name="ViewFoodBanks" component={ViewFoodBanks} />
 <Stack.Screen name="FoodBankDetail" component={FoodBankDetail} />
 <Stack.Screen name="ScanExpiryDate" component={ScanExpiryDate} />
+<Stack.Screen name="FoodBanksInMap" component={FoodBanksInMap} />
 </Stack.Navigator>
 </AuthProvider>
 </NavigationContainer>

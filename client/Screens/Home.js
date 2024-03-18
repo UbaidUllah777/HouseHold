@@ -8,7 +8,13 @@ import MenuButton from "../components/UI/MenuButton";
 import { Card } from 'react-native-shadow-cards';
 
 export default function Home({ navigation }) {
-    const [state, setState] = useContext(AuthContext)
+    const [state, setState] = useContext(AuthContext);
+    const { user } = state;
+    const { username } = user || {};
+
+    const goBack = () => {
+        navigation.navigate('Login');
+    };
 
     const navigateToAddFoodItem = () => {
         navigation.navigate('AddFoodItem'); // Navigate to AddFoodItem screen
@@ -30,7 +36,14 @@ export default function Home({ navigation }) {
         navigation.navigate('ScanExpiryDate');
     };
 
-
+    const navigateToFoodBanksInMap = () => {
+        navigation.navigate('FoodBanksInMap');
+      };
+      if (!username) {
+        // If username is null, navigate the user to the Login screen
+        goBack();
+        return null; // Return null or any loading component if needed
+    }
     return (
         
         <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -223,7 +236,7 @@ export default function Home({ navigation }) {
                                 </View>
                             </TouchableOpacity>
                              {/* Find Food Bank */}
-                            <TouchableOpacity onPress={navigateToViewFoodBanks} style={styles.serviceContainer}>
+                            <TouchableOpacity onPress={navigateToFoodBanksInMap} style={styles.serviceContainer}>
                             <View style={styles.serviceContent}>
                                 <View style={{ width: 70, height: 70,backgroundColor:"white", margin:10, borderRadius:30 }}>
                                                     <Image source={require('../assets/findFoodbank.png')} style={{    width: '70%',
