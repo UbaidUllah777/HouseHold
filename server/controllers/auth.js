@@ -4,6 +4,10 @@ import { hashPassword, comparePassword } from "../helpers/auth";
 import jwt from "jsonwebtoken";
 import nanoid from "nanoid";
 import FoodItem from '../models/foodItem'
+import Notification from "../models/notifications"
+
+
+
 
 // sendgrid
 require("dotenv").config();
@@ -180,7 +184,8 @@ export const AddFoodItem = async (req, res) => {
       itemName,
       expiryDate,
       quantityORweight,
-      creator
+      creator,
+      creatorName
     } = req.body;
 
     if (!category) {
@@ -215,6 +220,16 @@ export const AddFoodItem = async (req, res) => {
     // Save the food item
     await foodItem.save();
 
+
+    // Add a notification
+    const notification = new Notification({
+      itemName,
+      creator,
+      creatorName
+  });
+
+    await notification.save();
+
     // Send a response back to the client
     res.json({ success: true, foodItem });
   } catch (err) {
@@ -235,6 +250,36 @@ export const AddFoodItem = async (req, res) => {
 //     res.status(500).json({ error: "Server error" });
 //   }
 // };
+
+
+// export const AddNotification = async (req, res) => {
+//   console.log("HIT Add Notification");
+//   try {
+//     // validation
+//     const {
+//       itemName,
+//       creator,
+//       creatorName
+//     } = req.body;
+
+   
+
+//     const notification = new Notification({
+//       itemName,
+//       creator,
+//       creatorName
+//     });
+
+//     await notification.save();
+
+//     // Send a response back to the client
+//     res.json({ success: true, notification });
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({ error: "Server error" });
+//   }
+// };
+
 
 
 
@@ -291,5 +336,21 @@ export const UpdateFoodItem = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server error" });
+  }
+};
+
+
+
+// Fetch notifications
+export const getNotifications = async (req, res) => {
+  try {
+    // Fetch notifications from the database
+    const notifications = await Notification.find();
+
+    // Send the notifications as a response
+    res.json(notifications);
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
+    res.status(500).json({ error: 'Server error' });
   }
 };

@@ -12,6 +12,7 @@ const {
   AddFoodItem,
   ViewFoodItems,
   UpdateFoodItem,
+  getNotifications,
 } = require("../controllers/auth");
 
 router.get("/", (req, res) => {
@@ -26,6 +27,8 @@ router.post("/reset-password", resetPassword);
 router.post("/add-food-item", AddFoodItem);
 router.get("/food-items", ViewFoodItems);
 router.post("/update-item", UpdateFoodItem);
+router.get("/notifications", getNotifications);
+
 
 
 export default router;

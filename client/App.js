@@ -16,6 +16,8 @@ import ViewFoodBanks from './Screens/ViewFoodBanks';
 import FoodBankDetail from './Screens/FoodBankDetail';
 import ScanExpiryDate from './Screens/ScanExpiryDate';
 import FoodBanksInMap from './Screens/FoodBanksInMap';
+import BlogDetail from './Screens/BlogDetail';
+import NotificationsScreen from './Screens/NotificationsScreen';
 
 
 import {AuthProvider} from "./context/auth"
@@ -53,6 +55,8 @@ export default function App() {
 <Stack.Screen name="FoodBankDetail" component={FoodBankDetail} />
 <Stack.Screen name="ScanExpiryDate" component={ScanExpiryDate} />
 <Stack.Screen name="FoodBanksInMap" component={FoodBanksInMap} />
+<Stack.Screen name="BlogDetail" component={BlogDetail} />
+<Stack.Screen name="NotificationsScreen" component={NotificationsScreen} />
 </Stack.Navigator>
 </AuthProvider>
 </NavigationContainer>

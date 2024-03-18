@@ -54,43 +54,38 @@ function AddFoodItem({ navigation }) {
 
        const signedUserId=state.user._id
 
-      const handleSubmit=async()=>{
-        setLoading(true)
-        if( !category||  !itemName||  !expiryDate||  !quantityORweight  ){
-          alert("All Fields Are Required!")
-          setLoading(false)
-          return
+       const handleSubmit = async () => {
+        setLoading(true);
+        if (!category || !itemName || !expiryDate || !quantityORweight) {
+            alert("All Fields Are Required!");
+            setLoading(false);
+            return;
         }
         try {
-          const {data} = await axios.post(`/add-food-item`,{
-            category,
-            itemName,
-            expiryDate,
-            quantityORweight,
-            creator:signedUserId
-            
-          });
-            if(data.error){
-              alert(data.error)
-              setLoading(false);
-    
-            }
-            else{
-    
-              setLoading(false)
-              console.log("ITEM ADDING UP SUCCESS =>",data)
-              alert( `${itemName} Added Successfully`)
-              // navigation.navigate("Home")
+            const { data } = await axios.post(`/add-food-item`, {
+                category,
+                itemName,
+                expiryDate,
+                quantityORweight,
+                creator: signedUserId,
+                creatorName: state.user.username // Add creatorName to the request body
+            });
+            if (data.error) {
+                alert(data.error);
+                setLoading(false);
+            } else {
+                setLoading(false);
+                console.log("ITEM ADDING UP SUCCESS =>", data);
+                alert(`${itemName} Added Successfully`);
+                // navigation.navigate("Home")
             }
         } catch (error) {
-          alert("Adding Food Item Up Failed, please try again")
-    
-          console.log(error);
-          setLoading(false)
-    
-          
+            console.log("Error:", error.response.data); 
+            alert("Adding Food Item Up Failed, please try again. Error: " + error.response.data.error); 
+            setLoading(false);
         }
-      }
+    };
+    
     
 
 
