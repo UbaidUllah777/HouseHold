@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext,useState,useEffect } from "react";
 import Text from "@kaloraat/react-native-text";
 import { AuthContext } from "../context/auth";
 import { useNavigation } from '@react-navigation/native';
@@ -6,12 +6,32 @@ import { StyleSheet, View, Platform, Image, TouchableOpacity,SafeAreaView,Status
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import MenuButton from "../components/UI/MenuButton";
 import { Card } from 'react-native-shadow-cards';
+import axios from 'axios';
 
 export default function Home({ navigation }) {
     const [state, setState] = useContext(AuthContext);
     const { user } = state;
-    const { username } = user || {};
+    const { username, _id } = user || {};
+    const [userPoints, setUserPoints] = useState(0); // State to store user points
 
+    const fetchUserPoints = async () => {
+        try {
+            // Fetch food items associated with the signed-in user
+            const response = await axios.get(`/food-items?creator=${_id}`);
+            const foodItems = response.data;
+            // Calculate total points based on the number of food items added by the user
+            const numberOfItemsAddedByUser = foodItems.length;
+            const calculatedPoints = numberOfItemsAddedByUser * 103;
+            setUserPoints(calculatedPoints);
+        } catch (error) {
+            console.error("Error fetching user points:", error);
+        }
+    };
+
+    useEffect(() => {
+        // Fetch user points when the component mounts or when user changes
+        fetchUserPoints();
+    }, [user]);
     const goBack = () => {
         navigation.navigate('Login');
     };
@@ -132,7 +152,7 @@ export default function Home({ navigation }) {
                             fontSize: 28,
                             color: "black"
                         }}>
-                            4790 pt
+                            {userPoints} pt
                         </Text> 
                   </View>
                   <Text style={{
