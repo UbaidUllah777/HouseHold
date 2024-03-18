@@ -47,17 +47,17 @@ export default function NotificationsScreen() {
                 {/* Notifications list */}
                 <View style={styles.notificationsContainer}>
                     {/* Display notifications */}
-                        {notifications.map((notification, index) => (
-                            <View key={index} style={index % 2 === 0 ? styles.evenNotification : styles.oddNotification}>
-                                <Text style={styles.notificationText}>
-                                    <Text style={styles.nameText}>
-                                        {notification.creatorName === state.user.username ? 'You' : notification.creatorName}
-                                    </Text> added new item : <Text style={styles.itemText}>{notification.itemName}</Text>
-                                </Text>
-                            </View>
-                        ))}
-
+                    {notifications.slice().reverse().map((notification, index) => (
+                        <View key={index} style={index % 2 === 0 ? styles.evenNotification : styles.oddNotification}>
+                            <Text style={styles.notificationText}>
+                                <Text style={styles.nameText}>
+                                    {notification.creatorName === state.user.username ? 'You' : notification.creatorName}
+                                </Text> added new item : <Text style={styles.itemText}>{notification.itemName}</Text>
+                            </Text>
+                        </View>
+                    ))}
                 </View>
+
             </KeyboardAwareScrollView>
         </View>
     );
