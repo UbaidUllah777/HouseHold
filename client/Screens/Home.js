@@ -2,7 +2,7 @@ import React, { useContext,useState,useEffect } from "react";
 import Text from "@kaloraat/react-native-text";
 import { AuthContext } from "../context/auth";
 import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, View, Platform, Image, TouchableOpacity,SafeAreaView,StatusBar,ScrollView } from 'react-native'
+import { StyleSheet, View, Platform, Image, TouchableOpacity,SafeAreaView,StatusBar,ScrollView,ActivityIndicator } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import MenuButton from "../components/UI/MenuButton";
 import { Card } from 'react-native-shadow-cards';
@@ -12,26 +12,39 @@ export default function Home({ navigation }) {
     const [state, setState] = useContext(AuthContext);
     const { user } = state;
     const { username, _id } = user || {};
-    const [userPoints, setUserPoints] = useState(0); // State to store user points
+    const [userPoints, setUserPoints] = useState(0);
+    const [loading, setLoading] = useState(true); // Add loading state
 
     const fetchUserPoints = async () => {
         try {
-            // Fetch food items associated with the signed-in user
             const response = await axios.get(`/food-items?creator=${_id}`);
             const foodItems = response.data;
-            // Calculate total points based on the number of food items added by the user
             const numberOfItemsAddedByUser = foodItems.length;
             const calculatedPoints = numberOfItemsAddedByUser * 103;
             setUserPoints(calculatedPoints);
+            setLoading(false); // Update loading state after fetching data
         } catch (error) {
             console.error("Error fetching user points:", error);
+            setLoading(false); // Update loading state in case of error
         }
     };
 
-    useEffect(() => {
-        // Fetch user points when the component mounts or when user changes
+
+useEffect(() => {
         fetchUserPoints();
     }, [user]);
+
+    // Handle loading state
+    if (loading) {
+        return <ActivityIndicator size="large" color="#0000ff" style={styles.LoadingSpinner} />;
+    }
+
+    // If username is null, navigate the user to the Login screen
+    if (!username) {
+        navigation.navigate('Login');
+        return null; 
+    }
+
     const goBack = () => {
         navigation.navigate('Login');
     };
@@ -543,4 +556,7 @@ const styles = StyleSheet.create({
         color: "black",
         textAlign: 'center',
     },
+    LoadingSpinner:{
+        marginTop:"60%"
+    }
 });
