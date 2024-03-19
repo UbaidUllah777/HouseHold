@@ -4,9 +4,9 @@ import { AuthContext } from "../context/auth";
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View, Platform, Image, TouchableOpacity,SafeAreaView,StatusBar,ScrollView,ActivityIndicator } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import MenuButton from "../components/UI/MenuButton";
 import { Card } from 'react-native-shadow-cards';
 import axios from 'axios';
+import { IconButton, MD3Colors } from 'react-native-paper';
 
 export default function Home({ navigation }) {
     const [state, setState] = useContext(AuthContext);
@@ -214,7 +214,10 @@ useEffect(() => {
         navigation.navigate('NotificationsScreen');
     };
 
-
+    const showAlert = () => {
+        alert("This function will be added soon!");
+      };
+      
 
       if (!username) {
         // If username is null, navigate the user to the Login screen
@@ -279,7 +282,14 @@ useEffect(() => {
                         </View>
 
                         {/* Menu Icon */}
-                        <MenuButton />
+                        <TouchableOpacity onPress={showAlert}>
+                        <IconButton
+                                icon="menu"
+                                iconColor="white"
+                                size={40}
+                          
+                            />
+                        </TouchableOpacity>
                     </View>
                 </View>
 
@@ -429,7 +439,7 @@ useEffect(() => {
 
                             
                              {/* Scan Expiry date */}
-                             <TouchableOpacity onPress={navigateToScanExpiryDate} style={styles.serviceContainer}>
+                             <TouchableOpacity onPress={showAlert} style={styles.serviceContainer}>
                             <View style={styles.serviceContent}>
                                 <View style={{ width: 70, height: 70,backgroundColor:"white", margin:10, borderRadius:30 }}>
                                                     <Image source={require('../assets/scanExpiry.png')} style={{    width: '70%',
@@ -559,6 +569,7 @@ useEffect(() => {
                 paddingHorizontal: 10
             }}>
 
+<TouchableOpacity onPress={showAlert}>
                     <View style={{ 
                         width: 50,
                          height: 50, 
@@ -570,10 +581,14 @@ useEffect(() => {
                         <Image source={require('../assets/homeIcon.png')} style={styles.barCodeImage} />
                     </View>
 
+</TouchableOpacity>
 
+<TouchableOpacity onPress={showAlert}>
                     <View style={[styles.container, { width: 50, height: 50 }]}>
                         <Image source={require('../assets/barcodeIcon.png')} style={styles.barCodeImage} />
                     </View>
+
+                    </TouchableOpacity>
                     <TouchableOpacity onPress={navigateToNotifications} >
                     <View style={{ 
                         width: 50,

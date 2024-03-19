@@ -6,7 +6,7 @@ const MenuButton = () => (
     icon="menu"
     iconColor="white"
     size={40}
-    onPress={() => console.log('Pressed')}
+  
   />
 );
 
