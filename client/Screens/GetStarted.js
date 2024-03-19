@@ -1,7 +1,6 @@
 import React from 'react'
 import { StyleSheet, Text, View,Image } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import { Button, ButtonGroup, withTheme } from '@rneui/themed';
+import { Button } from '@rneui/themed';
 
 export default function GetStarted({navigation}) {
     return (
@@ -10,7 +9,7 @@ export default function GetStarted({navigation}) {
           <Image  style={styles.HomeLogo} source = {require('../assets/HouseHoldLogo.png')} />
           <Button
                   title="GET STARTED"
-                  onPress={() => navigation.navigate("SignUp")}
+                  onPress={() => navigation.navigate("Login")}
 
                   buttonStyle={{
                     borderColor: 'rgba(78, 116, 289, 1)',
@@ -27,7 +26,6 @@ export default function GetStarted({navigation}) {
                 />
     
     
-          <StatusBar style="auto" />
         </View>
       );
 }

@@ -38,7 +38,7 @@ export default function App() {
   return (
 <NavigationContainer>
 <AuthProvider>
-<Stack.Navigator initialRouteName="Login"   screenOptions={{
+<Stack.Navigator initialRouteName="GetStarted"   screenOptions={{
     headerShown: false
   }}>
 <Stack.Screen name="GetStarted" component={GetStarted} />
