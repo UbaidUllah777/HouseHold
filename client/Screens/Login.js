@@ -58,7 +58,7 @@ import { AuthContext } from '../context/auth';
 
   const loadFromAsyncStorage = async () => {
     let data= await AsyncStorage.getItem("@auth");
-    console.log("FROM ASYNC STORAGE => ", data);
+    
     };
     loadFromAsyncStorage();
 

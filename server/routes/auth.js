@@ -14,6 +14,7 @@ const {
   UpdateFoodItem,
   getNotifications,
   signinWithPhone,
+  uploadImage,
 } = require("../controllers/auth");
 
 router.get("/", (req, res) => {
@@ -21,6 +22,8 @@ router.get("/", (req, res) => {
     data: "Hello, Doha Testing Main ROute",
   });
 });
+
+router.post("/upload-image", uploadImage);
 router.post("/signup", signup);
 router.post("/signin", signin);
 router.post("/signin-with-phone", signinWithPhone);

@@ -5,7 +5,14 @@ import jwt from "jsonwebtoken";
 import nanoid from "nanoid";
 import FoodItem from '../models/foodItem'
 import Notification from "../models/notifications"
-
+import {v2 as cloudinary} from 'cloudinary';
+          
+          
+cloudinary.config({ 
+  cloud_name: 'drpmfcp5d', 
+  api_key: '161878851329786', 
+  api_secret: 'FunH6GZH_wGeNzXe_AOOxwWj0Xs' 
+});
 
 
 
@@ -220,9 +227,15 @@ export const AddFoodItem = async (req, res) => {
       expiryDate,
       quantityORweight,
       creator,
-      creatorName
+      creatorName,
+      image
     } = req.body;
 
+    if (!image) {
+      return res.json({
+        error: "Please Select an Image",
+      });
+    }
     if (!category) {
       return res.json({
         error: "category Full Name is required",
@@ -249,7 +262,11 @@ export const AddFoodItem = async (req, res) => {
       itemName,
       expiryDate,
       quantityORweight,
-      creator
+      creator,
+      image: {
+        public_id: image.public_id,
+        url: image.url
+      }
     });
 
     // Save the food item
@@ -387,5 +404,20 @@ export const getNotifications = async (req, res) => {
   } catch (error) {
     console.error('Error fetching notifications:', error);
     res.status(500).json({ error: 'Server error' });
+  }
+};
+
+export const uploadImage = async (req, res) => {
+  console.log("ENTERED UPLOAD  IMAGE");
+  console.log("Entered Upload iMage and Image in Req Body is => ", req.body);
+  try {
+    const result = await cloudinary.uploader.upload(req.body.image, {
+      public_id: nanoid()
+    });
+    console.log("CLOUDINARY RESULT result => ", result);
+    res.json(result); // Sending the Cloudinary upload result as JSON response
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Server error" });
   }
 };

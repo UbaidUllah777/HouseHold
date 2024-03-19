@@ -10,14 +10,27 @@ import { AuthContext } from '../context/auth';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import SelectDropdown from 'react-native-select-dropdown'
+import FoodImage from '../components/UI/FoodImage';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import * as ImagePicker from 'expo-image-picker';
 
 function AddFoodItem({ navigation }) {
   const [category, setCategory] = useState('');
   const [itemName, setItemName] = useState('');
   const [expiryDate, setExpiryDate] = useState(new Date());
   const [quantityORweight, setQuantityORweight] = useState('');
+
   const [showPicker, setShowPicker] = useState(false);
   const [loading,setLoading]=useState(false);
+  const [uploadImage,setUploadImage]=useState("")
+  const [image, setImage]=useState({
+    url:"",
+    public_id:""
+  })
+
+
+
+
 
   const toggleDatePicker = () => {
     setShowPicker(!showPicker);
@@ -54,39 +67,86 @@ function AddFoodItem({ navigation }) {
 
        const signedUserId=state.user._id
 
-       const handleSubmit = async () => {
-        setLoading(true);
-        if (!category || !itemName || !expiryDate || !quantityORweight) {
-            alert("All Fields Are Required!");
-            setLoading(false);
-            return;
-        }
-        try {
-            const { data } = await axios.post(`/add-food-item`, {
-                category,
-                itemName,
-                expiryDate,
-                quantityORweight,
-                creator: signedUserId,
-                creatorName: state.user.username // Add creatorName to the request body
-            });
-            if (data.error) {
-                alert(data.error);
-                setLoading(false);
-            } else {
-                setLoading(false);
-                console.log("ITEM ADDING UP SUCCESS =>", data);
-                alert(`${itemName} Added Successfully`);
-                // navigation.navigate("Home")
-            }
-        } catch (error) {
-            console.log("Error:", error.response.data); 
-            alert("Adding Food Item Up Failed, please try again. Error: " + error.response.data.error); 
-            setLoading(false);
-        }
-    };
     
     
+    const handleImageUpload=async ()=>{
+
+      let permissionResult =  await ImagePicker.requestMediaLibraryPermissionsAsync();
+          if (permissionResult.granted=== false) {
+          alert("Camera access is required");
+          return;
+          }
+          // get image from image Library
+        let pickerResult = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        aspect: [4,3],
+        base64: true,
+        });
+        // console.log("PICKER RESULT ==> ", pickerResult);
+
+        // console.log("PICKER RESULT", pickerResult);
+        if (pickerResult.canceled === true) {
+          console.log("CANCELED")
+          return;
+          }
+          // save to state for preview
+          let base64Image = `data:image/jpg;base64,${pickerResult.assets[0].base64}`;
+           setUploadImage(base64Image);
+          
+           
+        
+              try {
+                // Send to backend for uploading to Cloudinary
+                const { data } = await axios.post("/upload-image", { image: base64Image });
+
+                // Log the response
+                console.log("UPLOADED RESPONSE => ", data);
+
+                // Update the image state with the response data
+                setImage({
+                  url: data.secure_url,
+                  public_id: data.public_id
+                });
+
+              } catch (error) {
+                console.error("Error uploading image:", error);
+                // Handle error if needed
+              }
+
+    }
+
+    const handleSubmit = async () => {
+      setLoading(true);
+      if (!category || !itemName || !expiryDate || !quantityORweight || !image) {
+          alert("All Fields Are Required!");
+          setLoading(false);
+          return;
+      }
+      try {
+          const { data } = await axios.post(`/add-food-item`, {
+              category,
+              itemName,
+              expiryDate,
+              quantityORweight,
+              image,
+              creator: signedUserId,
+              creatorName: state.user.username 
+          });
+          if (data.error) {
+              alert(data.error);
+              setLoading(false);
+          } else {
+              setLoading(false);
+              console.log("ITEM ADDING UP SUCCESS =>", data);
+              alert(`${itemName} Added Successfully`);
+              // navigation.navigate("Home")
+          }
+      } catch (error) {
+          console.log("Error:", error.response.data); 
+          alert("Adding Food Item Up Failed, please try again. Error: " + error.response.data.error); 
+          setLoading(false);
+      }
+  };
 
 
   return (
@@ -197,6 +257,34 @@ function AddFoodItem({ navigation }) {
        
 
         <UserInput name="Quantity or weight*" value={quantityORweight} setValue={setQuantityORweight} />
+
+        <View style={{marginHorizontal:40}}>
+          <Text style={{ fontWeight: '700', fontFamily: 'poppins',marginBottom:10 }}>Select Food Image*</Text>
+          <FoodImage>
+                    {image && image.url? (
+                        <Image
+                        source={{ uri: image.url}}
+                        style={{ resizeMode: "contain", width: 100, height: 100 }}
+                        />
+                        ) : uploadImage ? (
+                        <Image
+                        source={{ uri: uploadImage}}
+                        style={{ resizeMode: "contain", width: 100, height: 100 }}
+                        />
+          ):(
+         <TouchableOpacity onPress={handleImageUpload}>
+          <FontAwesome5  name="camera" size={35} color="green" />
+         </TouchableOpacity>
+            )}
+        </FoodImage>
+
+                {image || image.url?(         <TouchableOpacity onPress={handleImageUpload}>
+          <Text
+            style={{alignSelf:"center", color:"green", fontFamily:"poppins", marginTop:-10}}
+          
+          >Change Image</Text>
+         </TouchableOpacity>):<></>}
+        </View>
 
         <Button
           title={!loading ? "Add": "Adding Item please wait"}

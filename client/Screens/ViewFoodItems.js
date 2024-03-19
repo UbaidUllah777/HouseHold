@@ -61,7 +61,7 @@ const ViewFoodItems = ({ navigation,route }) => {
       .map((item, index) => (
         <TouchableOpacity key={index} onPress={() => navigateToDetail(item)}>
           <View style={styles.foodItemCard}>
-            <Image source={require('../assets/cocoloate.png')} style={styles.foodItemImage} />
+          <Image source={{ uri: item.image.url }} style={styles.foodItemImage} />
             <Text center style={styles.itemName}>{item.itemName}</Text>
             <TouchableOpacity onPress={() => navigateToDetail(item)}>
               <Text style={styles.detailsButtonText}>Details</Text>
