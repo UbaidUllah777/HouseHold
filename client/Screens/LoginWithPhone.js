@@ -1,37 +1,53 @@
-import React,{useState} from 'react'
-import { StyleSheet, View,TextInput,Platform} from 'react-native'
+import React,{useState, useContext} from 'react'
+import { StyleSheet, View,Platform} from 'react-native'
 import  Text from '@kaloraat/react-native-text'
 import UserInput from "../components/auth/UserInput"
-import { Button, ButtonGroup, withTheme } from '@rneui/themed';
+import { Button } from '@rneui/themed';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import axios from 'axios';
-
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthContext } from '../context/auth';
 
  function LoginWithPhone({navigation}) {
   const [phoneNumber,setPhoneNumber]=useState("");
   const [password,setPassword]=useState("");
   const [loading,setLoading]=useState("");
 
+  // context
+  const[state,setState]=useContext(AuthContext)
 
 
   const handleSubmit=async()=>{
     setLoading(true)
-    if(  !password||   !phoneNumber  ){
+    if(  !phoneNumber ||   !password  ){
       alert("All Fields Are Required!")
       setLoading(false)
       return
     }
     try {
-      const {data} = await axios.post('http://localhost:8081/api/signin',{
-      
+      const {data} = await axios.post(`/signin-with-phone`,{
         phoneNumber,
-        password
+        password 
       });
-        setLoading(false)
+      if(data.error){
+        alert(data.error);
+        setLoading(false);
+      }
+    else{   
+
+      setState(data)
+      // save response in async storage
+      await AsyncStorage.setItem("@auth", JSON.stringify(data));
+       setLoading(false)
       console.log("SIGN IN SUCCESS =>",data)
       alert("SIGNED IN SUCCESSFULLY")
+      
+      navigation.navigate("Home")
+    };
+
+
     } catch (error) {
+      alert("Logging In Failed, please try again")
       console.log(error);
       setLoading(false)
 
@@ -40,7 +56,11 @@ import axios from 'axios';
   }
 
 
-
+  const loadFromAsyncStorage = async () => {
+    let data= await AsyncStorage.getItem("@auth");
+    console.log("FROM ASYNC STORAGE => ", data);
+    };
+    loadFromAsyncStorage();
 
   return (
 
@@ -58,13 +78,12 @@ import axios from 'axios';
         marginTop:'25%'
       }}>Login With Phone Number</Text>
     <UserInput name="Phone Number"  value={phoneNumber} setValue={setPhoneNumber} />
-    <UserInput name="Password"  value={password} setValue={setPassword} secureTextEntry={true} autoComplete="password" />
+    <UserInput name="Password"  value={password} setValue={setPassword} secureTextEntry={true} autoComplete="password"  />
 
-    <Text onPress={() => navigation.navigate("ResetPassword")}  center style={{
+    <Text  onPress={() => navigation.navigate("ResetPassword")} center style={{
       color:"green",
     }}>Forgot password?</Text>
     <Button
-              
               onPress={handleSubmit}
               title={loading ? "Please Wait..." : "Log In"}
 
@@ -99,7 +118,7 @@ import axios from 'axios';
 
 <Button
               title="Email"
-              onPress={() => navigation.navigate("Login")} 
+              onPress={() => navigation.navigate("Login")}
               titleStyle={{ fontWeight: '600',fontFamily:'poppins', color:'black' }}
               buttonStyle={{
                 backgroundColor: '#F9F9Ff',

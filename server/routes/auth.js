@@ -13,6 +13,7 @@ const {
   ViewFoodItems,
   UpdateFoodItem,
   getNotifications,
+  signinWithPhone,
 } = require("../controllers/auth");
 
 router.get("/", (req, res) => {
@@ -22,6 +23,7 @@ router.get("/", (req, res) => {
 });
 router.post("/signup", signup);
 router.post("/signin", signin);
+router.post("/signin-with-phone", signinWithPhone);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
 router.post("/add-food-item", AddFoodItem);

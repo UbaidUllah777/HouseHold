@@ -116,6 +116,41 @@ export const signin = async (req, res) => {
   }
 };
 
+
+export const signinWithPhone = async (req, res) => {
+  // console.log(req.body);
+  try {
+    const { phoneNumber, password } = req.body;
+    // check if our db has user with that phoneNumber
+    const user = await User.findOne({ phoneNumber });
+    if (!user) {
+      return res.json({
+        error: "No user found",
+      });
+    }
+    // check password
+    const match = await comparePassword(password, user.password);
+    if (!match) {
+      return res.json({
+        error: "Wrong password",
+      });
+    }
+    // create signed token
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    user.password = undefined;
+    user.secret = undefined;
+    res.json({
+      token,
+      user,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send("Error. Try again.");
+  }
+};
 export const forgotPassword = async (req, res) => {
   const { email } = req.body;
   // find user by email
