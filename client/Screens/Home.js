@@ -210,6 +210,10 @@ useEffect(() => {
         navigation.navigate('FoodBanksInMap');
       };
 
+      const navigateToBarCodeReadScreen = () => {
+        navigation.navigate('BarCodeScan');
+      };
+
       const navigateToNotifications = () => {
         navigation.navigate('NotificationsScreen');
     };
@@ -283,12 +287,13 @@ useEffect(() => {
 
                         {/* Menu Icon */}
                         <TouchableOpacity onPress={showAlert}>
-                        <IconButton
-                                icon="menu"
-                                iconColor="white"
-                                size={40}
-                          
-                            />
+                        <Image
+                    source={require('../assets/menuButton.png')} style={{    width: 50,
+                    height: 50,
+                    marginLeft: 0,
+                    marginTop:2
+                    }}
+                    />
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -335,6 +340,13 @@ useEffect(() => {
                         </Text>
                     </View> 
                 <View style={{flexDirection:"row"}}>
+                    <Image
+                    source={require('../assets/rewardsBadge.png')} style={{    width: 40,
+                    height: 40,
+                    marginLeft: 0,
+                    marginTop:8
+                    }}
+                    />
                 <Text style={{
                             fontFamily: "poppins",
                             fontWeight: 300,
@@ -583,7 +595,7 @@ useEffect(() => {
 
 </TouchableOpacity>
 
-<TouchableOpacity onPress={showAlert}>
+<TouchableOpacity onPress={navigateToBarCodeReadScreen}>
                     <View style={[styles.container, { width: 50, height: 50 }]}>
                         <Image source={require('../assets/barcodeIcon.png')} style={styles.barCodeImage} />
                     </View>
