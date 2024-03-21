@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, TouchableOpacity, TextInput, Platform, Alert, ActivityIndicator,Image } from 'react-native';
 import { Button } from '@rneui/themed';
 import Text from '@kaloraat/react-native-text';
@@ -6,21 +6,45 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import axios from 'axios'; // Import axios for making API requests
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-const ItemDetailScreen = ({ navigation, route }) => {
-  const { item } = route.params; // Destructure item from route params
-  const [updatedItem, setUpdatedItem] = useState(item); // Initialize updatedItem state with the item details
+const ScanResult = ({ navigation, route }) => {
+
+  
+  const { id } = route.params;
+ // Extract scanned ID from route params
+  const [item, setItem] = useState(null); // State variable to store item data
+  const [updatedItem, setUpdatedItem] = useState(null); // State variable to store updated item data
   const [editMode, setEditMode] = useState(false); // State variable to track edit mode
   const [showDatePicker, setShowDatePicker] = useState(false); // State variable to track date picker visibility
-  const [expiryDate, setExpiryDate] = useState(updatedItem.expiryDate ? new Date(updatedItem.expiryDate) : new Date());
+  const [expiryDate, setExpiryDate] = useState(new Date()); // State variable to store expiry date
   const [updating, setUpdating] = useState(false); // State variable to track updating state
+   console.log("THE ID IN SCAN RESULT PAGE: ", id)
+  useEffect(() => {
+    const fetchItem = async () => {
+      try {
+        const response = await axios.get(`/get-item/${id}`); // Fetch item data using scanned ID
+        setItem(response.data); // Set fetched item data to state
+        setUpdatedItem(response.data); // Initialize updated item with fetched data
+        // Set expiry date if available
+        if (response.data.expiryDate) {
+          setExpiryDate(new Date(response.data.expiryDate));
+        }
+      } catch (error) {
+        console.error(error);
+        // Handle error
+        Alert.alert('Error', 'Failed to fetch item data', [{ text: 'OK' }]);
+      }
+    };
+
+    fetchItem();
+  }, [id]);
 
   const goBack = () => {
-    navigation.goBack();
+    navigation.navigate("Home");
   };
 
   const toggleEditMode = () => {
     setEditMode(!editMode);
-    setShowDatePicker(false); // Ensure date picker is hidden when toggling edit mode
+    setShowDatePicker(false); 
   };
 
   const updateItemDetails = async () => {
@@ -65,28 +89,30 @@ const ItemDetailScreen = ({ navigation, route }) => {
       enableAutomaticScroll={Platform.OS === 'ios'}
       contentContainerStyle={styles.container}
     >
-           <View style={styles.backButtonContainer}>
+             <View style={styles.backButtonContainer}>
           <TouchableOpacity onPress={goBack} style={styles.backButton}>
             <Image source={require('../assets/backArrow.png')} style={styles.backArrow} />
           </TouchableOpacity>
         </View>
       <Text title bold center style={styles.title}>
-        Item Details
+        Scan Result
       </Text>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Category:</Text>
-        <TextInput
-          style={styles.input}
-          value={updatedItem.category}
-          onChangeText={(text) => setUpdatedItem({ ...updatedItem, category: text })}
-          editable={editMode} // Set editable based on edit mode
-        />
-      </View>
-      <View style={styles.inputContainer}>
+      {item && ( // Add a conditional check here
+      <View>
+    <View style={styles.inputContainer}>
+    <Text style={styles.label}>Category:</Text>
+    <TextInput
+      style={styles.input}
+      value={updatedItem ? updatedItem.category : ''}
+      onChangeText={(text) => setUpdatedItem({ ...updatedItem, category: text })}
+      editable={editMode} // Set editable based on edit mode
+    />
+  </View>
+  <View style={styles.inputContainer}>
         <Text style={styles.label}>Item Name:</Text>
         <TextInput
           style={styles.input}
-          value={updatedItem.itemName}
+          value={updatedItem ? updatedItem.itemName : ''}
           onChangeText={(text) => setUpdatedItem({ ...updatedItem, itemName: text })}
           editable={editMode} // Set editable based on edit mode
         />
@@ -114,7 +140,7 @@ const ItemDetailScreen = ({ navigation, route }) => {
         <Text style={styles.label}>Quantity:</Text>
         <TextInput
           style={styles.input}
-          value={updatedItem.quantityORweight.toString()}
+          value={updatedItem ? updatedItem.quantityORweight.toString(): ''}
           onChangeText={(text) => {
             const quantity = parseFloat(text);
             setUpdatedItem({ ...updatedItem, quantityORweight: isNaN(quantity) ? '' : quantity });
@@ -122,7 +148,11 @@ const ItemDetailScreen = ({ navigation, route }) => {
           editable={editMode} // Set editable based on edit mode
         />
       </View>
-      <TouchableOpacity onPress={toggleEditMode} style={styles.editButton}>
+  </View>
+  
+      )}
+
+<TouchableOpacity onPress={toggleEditMode} style={styles.editButton}>
         <Text style={styles.editButtonText}>{editMode ? 'OK' : 'Edit'}</Text>
       </TouchableOpacity>
       {/* ... */}
@@ -134,8 +164,10 @@ const ItemDetailScreen = ({ navigation, route }) => {
         containerStyle={styles.buttonContainer}
         disabled={!editMode || updating} // Disable the button when not in edit mode or when updating
       />
+      {/* Other input fields */}
     </KeyboardAwareScrollView>
   );
+  
 };
 const styles = StyleSheet.create({
   container: {
@@ -213,4 +245,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ItemDetailScreen;
+export default ScanResult;

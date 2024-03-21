@@ -15,6 +15,7 @@ const {
   getNotifications,
   signinWithPhone,
   uploadImage,
+  getFoodItemById,
 } = require("../controllers/auth");
 
 router.get("/", (req, res) => {
@@ -33,6 +34,8 @@ router.post("/add-food-item", AddFoodItem);
 router.get("/food-items", ViewFoodItems);
 router.post("/update-item", UpdateFoodItem);
 router.get("/notifications", getNotifications);
+router.get("/notifications", getNotifications);
+router.get("/get-item/:id", getFoodItemById);
 
 
 

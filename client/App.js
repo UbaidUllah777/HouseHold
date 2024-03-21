@@ -20,6 +20,7 @@ import BlogDetail from './Screens/BlogDetail';
 import NotificationsScreen from './Screens/NotificationsScreen';
 import Review from './Screens/Review'
 import BarCodeScan from './Screens/BarCodeScan';
+import ScanResult from './Screens/ScanResult';
 
 
 
@@ -41,7 +42,7 @@ export default function App() {
   return (
 <NavigationContainer>
 <AuthProvider>
-<Stack.Navigator initialRouteName="LoginWithPhone"   screenOptions={{
+<Stack.Navigator initialRouteName="GetStarted"   screenOptions={{
     headerShown: false
   }}>
 <Stack.Screen name="GetStarted" component={GetStarted} />
@@ -62,6 +63,7 @@ export default function App() {
 <Stack.Screen name="NotificationsScreen" component={NotificationsScreen} />
 <Stack.Screen name="Review" component={Review} />
 <Stack.Screen name="BarCodeScan" component={BarCodeScan} />
+<Stack.Screen name="ScanResult" component={ScanResult} />
 </Stack.Navigator>
 </AuthProvider>
 </NavigationContainer>

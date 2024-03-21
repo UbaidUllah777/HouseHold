@@ -421,3 +421,28 @@ export const uploadImage = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+
+
+export const getFoodItemById = async (req, res) => {
+  try {
+
+    // Extract the ID from the request parameters
+    const { id } = req.params;
+    console.log("ENETRED The FIND FOOD ITEM BY SCANNING AND THE ID IS =====>", id)
+
+    // Fetch the item from the database based on the provided ID
+    const item = await FoodItem.findById(id);
+
+    // Check if the item exists
+    if (!item) {
+      return res.status(404).json({ error: "Item not found" });
+    }
+
+    // Send the item details as a response
+    res.json(item);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
