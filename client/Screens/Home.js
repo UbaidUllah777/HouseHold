@@ -177,6 +177,9 @@ useEffect(() => {
         navigation.navigate('Login');
         return null; 
     }
+    const goToReview=()=>{
+        navigation.navigate('Review')
+    }
 
     const goBack = () => {
         navigation.navigate('Login');
@@ -565,6 +568,19 @@ useEffect(() => {
                         ))}
 
              
+             <View style={{
+              justifyContent: "center", alignItems: "center" 
+                
+             }}>
+             <Image source={require('../assets/103.png')} style={styles.ReviewImage} />
+             <TouchableOpacity onPress={goToReview}>
+                <Text center color="green" style={{
+                        marginBottom:50
+                }}
+                >
+                    Click Here to leave your Honest Review</Text>
+             </TouchableOpacity>
+             </View>
 
                 </View>
 
@@ -623,6 +639,12 @@ useEffect(() => {
 }
 
 const styles = StyleSheet.create({
+    ReviewImage:{
+        resizeMode:'contain',
+        width:300,
+        height:200,
+    }
+    ,
     loadingContainer: {
         marginTop: 100,
         flex: 1,

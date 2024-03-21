@@ -49,6 +49,7 @@ const Review = ({ navigation }) => {
   // Function to handle modal close
   const closeModal = () => {
     setModalVisible(false);
+    navigation.navigate("Home")
   };
 
   // Function to handle submission
@@ -140,7 +141,7 @@ const Review = ({ navigation }) => {
       <Text style={styles.successText}>Your review has been submitted successfully.</Text>
     </View>
   </View>
-</Modal>
+        </Modal>
 
 
     </View>
