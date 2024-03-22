@@ -14,13 +14,13 @@ import ViewFoodItems from './Screens/ViewFoodItems';
 import ItemDetailScreen from './Screens/ItemDetailScreen';
 import ViewFoodBanks from './Screens/ViewFoodBanks';
 import FoodBankDetail from './Screens/FoodBankDetail';
-import ScanExpiryDate from './Screens/ScanExpiryDate';
 import FoodBanksInMap from './Screens/FoodBanksInMap';
 import BlogDetail from './Screens/BlogDetail';
 import NotificationsScreen from './Screens/NotificationsScreen';
 import Review from './Screens/Review'
 import BarCodeScan from './Screens/BarCodeScan';
 import ScanResult from './Screens/ScanResult';
+import ScanExpiryDate from './Screens/ScanExpiryDate';
 
 
 
@@ -57,13 +57,13 @@ export default function App() {
 <Stack.Screen name="ItemDetail" component={ItemDetailScreen} />
 <Stack.Screen name="ViewFoodBanks" component={ViewFoodBanks} />
 <Stack.Screen name="FoodBankDetail" component={FoodBankDetail} />
-<Stack.Screen name="ScanExpiryDate" component={ScanExpiryDate} />
 <Stack.Screen name="FoodBanksInMap" component={FoodBanksInMap} />
 <Stack.Screen name="BlogDetail" component={BlogDetail} />
 <Stack.Screen name="NotificationsScreen" component={NotificationsScreen} />
 <Stack.Screen name="Review" component={Review} />
 <Stack.Screen name="BarCodeScan" component={BarCodeScan} />
 <Stack.Screen name="ScanResult" component={ScanResult} />
+<Stack.Screen name="ScanExpiryDate" component={ScanExpiryDate} />
 </Stack.Navigator>
 </AuthProvider>
 </NavigationContainer>

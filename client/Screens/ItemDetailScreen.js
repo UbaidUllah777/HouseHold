@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, TextInput, Platform, Alert, ActivityIndicator,Image } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, TextInput, Platform, Alert, ActivityIndicator,Image,Modal } from 'react-native';
 import { Button } from '@rneui/themed';
 import Text from '@kaloraat/react-native-text';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import axios from 'axios'; // Import axios for making API requests
 import DateTimePicker from '@react-native-community/datetimepicker';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const ItemDetailScreen = ({ navigation, route }) => {
   const { item } = route.params; // Destructure item from route params
@@ -13,6 +14,13 @@ const ItemDetailScreen = ({ navigation, route }) => {
   const [showDatePicker, setShowDatePicker] = useState(false); // State variable to track date picker visibility
   const [expiryDate, setExpiryDate] = useState(updatedItem.expiryDate ? new Date(updatedItem.expiryDate) : new Date());
   const [updating, setUpdating] = useState(false); // State variable to track updating state
+  const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
+  // Function to handle modal close
+  const closeModal = () => {
+    setModalVisible(false);
+    navigation.navigate('ViewFoodItems', { updatedItem });
+  };
+
 
   const goBack = () => {
     navigation.goBack();
@@ -34,9 +42,12 @@ const ItemDetailScreen = ({ navigation, route }) => {
       });
       if (response.data.success) {
         // Show success alert
-        Alert.alert('Success', 'Item updated successfully', [{ text: 'OK' }]);
+        // Alert.alert('Success', 'Item updated successfully', [{ text: 'OK' }]);
+        
+
+      setModalVisible(true);
         // Pass the updated item data back to the previous screen
-        navigation.navigate('ViewFoodItems', { updatedItem });
+        // navigation.navigate('ViewFoodItems', { updatedItem });
       } else {
         // Show failure alert
         Alert.alert('Error', 'Failed to update item', [{ text: 'OK' }]);
@@ -134,6 +145,19 @@ const ItemDetailScreen = ({ navigation, route }) => {
         containerStyle={styles.buttonContainer}
         disabled={!editMode || updating} // Disable the button when not in edit mode or when updating
       />
+
+<Modal visible={modalVisible}>
+  <View style={styles.modalContainer}>
+    <View style={styles.modalContent}>
+      <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+        <AntDesign name="close" size={24} color="#1C552B" />
+      </TouchableOpacity>
+      <Image source={require('../assets/modalImage.png')} style={styles.modalImage} />
+      <Text style={styles.thankYouText}>Update Successful!</Text>
+      <Text style={styles.successText}>Food item updated successfully.</Text>
+    </View>
+  </View>
+          </Modal>
     </KeyboardAwareScrollView>
   );
 };
@@ -210,6 +234,44 @@ const styles = StyleSheet.create({
   backArrow: {
     width: 20,
     height: 20,
+  },
+  
+  modalContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: '90%', 
+    backgroundColor: 'white',
+    padding: 40,
+    borderRadius: 25, 
+    alignItems: 'center',
+  },
+  modalImage: {
+    width: 100,
+    height: 100,
+    marginBottom: 20,
+  },
+  thankYouText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    fontFamily: 'poppins',
+    color: '#1C552B',
+  },
+  successText: {
+    fontSize: 14,
+    fontFamily: 'poppins',
+    marginBottom: 20,
+    textAlign: 'center',
+    color:"#1C552B"
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
   },
 });
 

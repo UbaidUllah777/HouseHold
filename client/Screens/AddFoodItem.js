@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { StyleSheet, View, TextInput, Image, Platform, Pressable, TouchableOpacity  } from 'react-native';
+import { StyleSheet, View, TextInput, Image, Platform, Pressable, TouchableOpacity,Modal  } from 'react-native';
 import Text from '@kaloraat/react-native-text';
 import UserInput from '../components/auth/UserInput';
 import { Button } from '@rneui/themed';
@@ -13,6 +13,7 @@ import SelectDropdown from 'react-native-select-dropdown'
 import FoodImage from '../components/UI/FoodImage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import * as ImagePicker from 'expo-image-picker';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 function AddFoodItem({ navigation }) {
   const [category, setCategory] = useState('');
@@ -27,6 +28,16 @@ function AddFoodItem({ navigation }) {
     url:"",
     public_id:""
   })
+
+  const [imageIsUplaoded, setImageIsUplaoded]= useState(false)
+
+  const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
+  // Function to handle modal close
+  const closeModal = () => {
+    setModalVisible(false);
+    navigation.navigate("Home")
+  };
+
 
 
 
@@ -107,14 +118,18 @@ function AddFoodItem({ navigation }) {
                   url: data.secure_url,
                   public_id: data.public_id
                 });
+                setImageIsUplaoded(true)
 
               } catch (error) {
                 console.error("Error uploading image:", error);
-                // Handle error if needed
+                setImageIsUplaoded(false)
               }
 
     }
 
+    const handleBarcodeScanNavigation=()=>{
+      navigation.navigate("BarCodeScan")
+    }
     const handleSubmit = async () => {
       setLoading(true);
       if (!category || !itemName || !expiryDate || !quantityORweight || !image) {
@@ -138,8 +153,13 @@ function AddFoodItem({ navigation }) {
           } else {
               setLoading(false);
               console.log("ITEM ADDING UP SUCCESS =>", data);
-              alert(`${itemName} Added Successfully`);
+         
               // navigation.navigate("Home")
+
+              
+
+                setModalVisible(true);
+
           }
       } catch (error) {
           console.log("Error:", error.response.data); 
@@ -290,6 +310,7 @@ function AddFoodItem({ navigation }) {
           title={!loading ? "Add": "Adding Item please wait"}
           onPress={handleSubmit}
           titleStyle={{ fontWeight: '600', fontFamily: 'poppins' }}
+          disabled={!(imageIsUplaoded)}
           buttonStyle={{
             backgroundColor: '#1C552B',
             borderColor: 'transparent',
@@ -308,6 +329,7 @@ function AddFoodItem({ navigation }) {
     <Button
               title="Scan"
               titleStyle={{ fontWeight: '600', fontFamily: 'poppins' }}
+              onPress={handleBarcodeScanNavigation}
               buttonStyle={{
                 backgroundColor: 'black',
                 borderColor: 'transparent',
@@ -322,11 +344,66 @@ function AddFoodItem({ navigation }) {
               }}
             />
       </View>
+
+
+      <Modal visible={modalVisible}>
+  <View style={styles.modalContainer}>
+    <View style={styles.modalContent}>
+      <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+        <AntDesign name="close" size={24} color="#1C552B" />
+      </TouchableOpacity>
+      <Image source={require('../assets/modalImage.png')} style={styles.modalImage} />
+      <Text style={styles.thankYouText}>Item adding Successful!</Text>
+      <Text style={styles.successText}>You have added Food Item successfully.</Text>
+    </View>
+  </View>
+          </Modal>
     </KeyboardAwareScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+
+  
+  modalContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: '90%', 
+    backgroundColor: 'white',
+    padding: 40,
+    borderRadius: 25, 
+    alignItems: 'center',
+  },
+  modalImage: {
+    width: 100,
+    height: 100,
+    marginBottom: 20,
+  },
+  thankYouText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    fontFamily: 'poppins',
+    color: '#1C552B',
+  },
+  successText: {
+    fontSize: 14,
+    fontFamily: 'poppins',
+    marginBottom: 20,
+    textAlign: 'center',
+    color:"#1C552B"
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+  },
+
+
   container: {
     flexGrow: 1,
     justifyContent: 'center',

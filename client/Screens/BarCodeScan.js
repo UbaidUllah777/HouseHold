@@ -77,6 +77,7 @@ export default function BarCodeScan({ navigation }) {
     setScanned(true);
     console.log(`Bar Code Type :  ${type} \n \n Data :  ${data} `);
     // Navigate to the Scan Result page and pass the scanned data as parameter
+    
     navigation.navigate('ScanResult', { id: data });
 
   };

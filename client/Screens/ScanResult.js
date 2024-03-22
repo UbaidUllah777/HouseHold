@@ -30,8 +30,9 @@ const ScanResult = ({ navigation, route }) => {
         }
       } catch (error) {
         console.error(error);
-        // Handle error
+       
         Alert.alert('Error', 'Failed to fetch item data', [{ text: 'OK' }]);
+        navigation.navigate("Home")
       }
     };
 
