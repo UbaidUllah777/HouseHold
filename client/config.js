@@ -1,5 +1,5 @@
-// export const API = "http://localhost:3000/api";
+export const API = "http://localhost:8081/api";
 
-const LT="https://proud-apples-work.loca.lt"
+// const LT="https://proud-apples-work.loca.lt"
 
-export const API=`${LT}/api`
+// export const API=`${LT}/api`

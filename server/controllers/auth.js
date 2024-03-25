@@ -90,15 +90,20 @@ export const signup = async (req, res) => {
 
 export const signin = async (req, res) => {
   // console.log(req.body);
+  console.log("entered Login")
   try {
     const { email, password } = req.body;
     // check if our db has user with that email
     const user = await User.findOne({ email });
     if (!user) {
+      
+  console.log("entered Login and userNOT  found")
       return res.json({
         error: "No user found",
       });
     }
+    
+  console.log("entered Login and user found")
     // check password
     const match = await comparePassword(password, user.password);
     if (!match) {
