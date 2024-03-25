@@ -20,7 +20,7 @@ import NotificationsScreen from './Screens/NotificationsScreen';
 import Review from './Screens/Review'
 import BarCodeScan from './Screens/BarCodeScan';
 import ScanResult from './Screens/ScanResult';
-import ScanExpiryDate from './Screens/ScanExpiryDate';
+import ExpiryDateScan from './Screens/ExpiryDateScan';
 
 
 
@@ -63,7 +63,7 @@ export default function App() {
 <Stack.Screen name="Review" component={Review} />
 <Stack.Screen name="BarCodeScan" component={BarCodeScan} />
 <Stack.Screen name="ScanResult" component={ScanResult} />
-<Stack.Screen name="ScanExpiryDate" component={ScanExpiryDate} />
+<Stack.Screen name="ExpiryDateScan" component={ExpiryDateScan} />
 </Stack.Navigator>
 </AuthProvider>
 </NavigationContainer>
